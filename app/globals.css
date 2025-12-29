@@ -12,6 +12,9 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-gilroy-sans: var(--font-gilroy);
+  --breakpoint-2xl: 1440px;
+  --color-custom-1: #525866;
+  --color-custom-2: #585858;
 }
 
 @media (prefers-color-scheme: dark) {
