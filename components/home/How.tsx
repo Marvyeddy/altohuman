@@ -1,108 +1,119 @@
-import Image from "next/image";
 import Typography from "../ui/Typography";
-import Image1 from "@/public/images/img1.png";
-import Vector1 from "@/public/assets/vector1.svg";
-import Vector2 from "@/public/assets/vector2.svg";
-import Phsparkle from "@/public/assets/ph_sparkle.svg";
-import Skeleton from "@/public/images/skeleteon.png";
-import Failed from "@/public/assets/button-failed.svg";
-import Success from "@/public/assets/button-success.svg";
+import Gpt from "@/public/assets/gpt.svg";
+import Gemini from "@/public/assets/gemini.svg";
+import Brain from "@/public/assets/brain.svg";
+import Coursera from "@/public/assets/coursera.svg";
+import Alexa from "@/public/assets/alexa.svg";
+import Meta from "@/public/assets/meta.svg";
+import Glow from "@/public/assets/glow.svg";
+import Image from "next/image";
+import Ai from "@/public/assets/ai.svg";
+import Lock from "@/public/assets/lock-check.svg";
+import Click from "@/public/assets/click.svg";
+import Humanize from "@/public/assets/humanize-ai.svg";
+import Img2 from "@/public/images/img2.png";
+import Img3 from "@/public/images/img3.png";
+import Img4 from "@/public/images/img4.png";
+import Img5 from "@/public/images/img5.png";
 
 const How = () => {
+  const Svg = [Gpt, Gemini, Brain, Coursera, Alexa, Meta, Glow];
+
   return (
     <section className="min-h-screen">
-      <div className="max-w-[1200px] mx-auto px-6">
-        <div className="w-fit mx-auto text-center lg:mt-[102px] mt-[60px] space-y-3 lg:mb-10 mb-6">
-          <Typography.H2>How Altohuman Works</Typography.H2>
-          <Typography.P>Get your result instantly</Typography.P>
+      <div className="max-w-[1200px] px-6 mx-auto">
+        <div className="w-fit text-center space-y-3 mx-auto mt-[100px] mb-10">
+          <Typography.H2>Why Choose Altohuman </Typography.H2>
+          <Typography.P color="custom-1">
+            Get your result instantly
+          </Typography.P>
         </div>
 
-        <div className="flex max-lg:flex-col lg:gap-x-6 gap-3 lg:mb-[102px] mb-[60px] md:max-w-sm lg:max-w-none md:mx-auto">
-          {/* Card 1 */}
-          <div className="bg-[#F7F7F7] flex-1 h-[446px]">
-            <div className="space-y-3 px-[21px] pt-[32px]">
-              <Typography.H3>Paste or upload AI content</Typography.H3>
-              <Typography.P>
-                Easily paste your text or upload a file to get started from any
-                AI
-              </Typography.P>
-            </div>
+        <ul className="flex items-center space-x-2 w-fit mx-auto mb-10">
+          {Svg.map((img, idx) => (
+            <figure key={idx}>
+              <Image src={img} alt="image" />
+            </figure>
+          ))}
+        </ul>
 
-            <Image
-              src={Image1}
-              alt="img-1"
-              className="lg:mt-[63px] mt-10 w-full h-auto"
-            />
-          </div>
-
-          {/* Card 2 */}
-          <div className="bg-[#F7F7F7] relative flex-1 flex flex-col h-[446px]">
-            <div className="space-y-3 px-[21px] pt-[32px]">
-              <Typography.H3>Choose an option</Typography.H3>
-              <Typography.P>
-                Select whether you want to humanize the text or check for AI
-                content
-              </Typography.P>
-            </div>
-
-            <div className="flex flex-col justify-center items-center">
-              <div className="relative my-[64px] lg:my-[106px] w-full flex justify-center">
-                <figure className="relative">
-                  <Image src={Vector2} alt="vector-2" className="absolute" />
-                  <Image src={Vector1} alt="vector-1" />
-                </figure>
-
-                <figure className="absolute inset-0 flex justify-center items-center">
-                  <Image
-                    src={Phsparkle}
-                    alt="sparkle"
-                    className="max-lg:size-[89px]"
-                  />
-                </figure>
-              </div>
-            </div>
-
-            <div className="flex gap-5 justify-center mb-[25px]">
-              {/* Primary buttons */}
-              <div className="bg-white rounded-full font-extrabold text-center px-4 py-2 text-sm">
-                Check Ai Score
-              </div>
-
-              <div className="text-white font-extrabold bg-black rounded-full text-center px-3 py-2 text-sm">
-                Humanize
-              </div>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-[#F7F7F7] flex-1 flex flex-col h-[446px]">
-            <div className="space-y-3 px-[21px] pt-[32px]">
-              <Typography.H3>Get instant results</Typography.H3>
-              <Typography.P>
-                Receive your transformed or analyzed text within seconds
-              </Typography.P>
-            </div>
-
-            <div className="flex flex-col lg:mt-[63px] mt-10 overflow-hidden">
-              <div className="flex items-center gap-3 justify-center">
-                <Image
-                  src={Failed}
-                  alt="button-failed"
-                  className="max-lg:w-[120px] max-2xl:w-[140px]"
-                />
-                <Image
-                  src={Success}
-                  alt="button-success"
-                  className="max-lg:w-[117px] max-2xl:w-[130px]"
-                />
-              </div>
-
+        <div className="flex flex-row space-x-6 max-lg:flex-col max-lg:space-x-0 max-lg:space-y-6">
+          {/* first */}
+          <div className="flex-2 bg-[#F7F7F7] pt-8 flex flex-col">
+            <div className="flex gap-3 items-start mb-6 px-7 max-sm:flex-col max-sm:px-4 max-sm:gap-2">
               <Image
-                src={Skeleton}
-                alt="skeleton"
-                className="w-full px-4 h-auto"
+                src={Ai}
+                alt="ai"
+                className="w-10 h-10 max-sm:w-8 max-sm:h-8"
               />
+              <div className="space-y-3 w-[464px] max-w-full max-sm:w-full">
+                <Typography.H3>AI content detection</Typography.H3>
+                <Typography.P>
+                  Identify AI-generated text with high precision, ensuring your
+                  content is original and credible.
+                </Typography.P>
+              </div>
             </div>
+            <Image src={Img2} alt="img2" className="w-full h-auto" />
+          </div>
+
+          {/* second */}
+          <div className="flex-1 bg-[#f7f7f7] pt-8 px-7 max-sm:px-4 flex flex-col">
+            <div className="flex gap-3 items-start mb-[17px] max-sm:flex-col max-sm:gap-2">
+              <Image
+                src={Lock}
+                alt="lock"
+                className="w-10 h-10 max-sm:w-8 max-sm:h-8"
+              />
+              <div className="space-y-3 w-[371px] max-w-full max-sm:w-full">
+                <Typography.H3>Secure and reliable</Typography.H3>
+                <Typography.P>
+                  Simply paste or upload your text, and let our app do the
+                  magic. No technical expertise required
+                </Typography.P>
+              </div>
+            </div>
+            <Image src={Img3} alt="img3" className="w-full h-auto" />
+          </div>
+        </div>
+
+        <div className="flex flex-row space-x-6 mt-6 max-lg:flex-col max-lg:space-x-0 max-lg:space-y-6">
+          {/* third */}
+          <div className="flex-1 bg-[#f7f7f7] pt-8 px-7 max-sm:px-4 flex flex-col">
+            <div className="flex gap-3 items-start mb-[41px] max-sm:flex-col max-sm:gap-2">
+              <Image
+                src={Click}
+                alt="click"
+                className="w-10 h-10 max-sm:w-8 max-sm:h-8"
+              />
+              <div className="space-y-3 w-[371px] max-w-full max-sm:w-full">
+                <Typography.H3>Easy to use</Typography.H3>
+                <Typography.P>
+                  Easily paste your text or upload a file to get started from
+                  any AI
+                </Typography.P>
+              </div>
+            </div>
+            <Image src={Img4} alt="img4" className="w-full h-auto" />
+          </div>
+
+          {/* fourth */}
+          <div className="flex-2 bg-[#F7F7F7] pt-8 flex flex-col">
+            <div className="flex gap-3 items-start mb-6 px-7 max-sm:flex-col max-sm:px-4 max-sm:gap-2">
+              <Image
+                src={Humanize}
+                alt="humanize"
+                className="w-10 h-10 max-sm:w-8 max-sm:h-8"
+              />
+              <div className="space-y-3 w-[464px] max-w-full max-sm:w-full">
+                <Typography.H3>Humanized AI text</Typography.H3>
+                <Typography.P>
+                  Identify AI-generated text with high precision, ensuring your
+                  content is original and credible.
+                </Typography.P>
+              </div>
+            </div>
+            <Image src={Img5} alt="img5" className="w-full h-auto" />
           </div>
         </div>
       </div>
