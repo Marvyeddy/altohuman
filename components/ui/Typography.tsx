@@ -2,11 +2,11 @@ import { ReactNode } from "react";
 
 const textStyles = {
   size: {
-    xl: "text-[32px] 2xl:text-[56px] leading-[106%] 2xl:leading-none tracking-[-2%]",
-    lg: "text-[20px] 2xl:text-[40px] leading-none tracking-normal",
-    md: "text-[16px] 2xl:text-[24px] leading-none",
+    xl: "text-[32px] lg:text-[56px] leading-[106%] lg:leading-none tracking-[-2%]",
+    lg: "text-[20px] lg:text-[40px] leading-none tracking-normal",
+    md: "text-[16px] lg:text-[24px] leading-none",
     "base-pro": "text-[20px] leading-[150%] tracking-[-3%]",
-    base: "text-[14px] 2xl:text-[16px]",
+    base: "text-[14px] lg:text-[16px]",
     sm: "text-sm",
     xs: "text-xs",
   },
@@ -39,7 +39,7 @@ function H1({
 }: HeaderProps) {
   return (
     <h1
-      className={`${textStyles.color[color]} ${textStyles.size[size]} ${textStyles.weight[weight]} ${className}`}
+      className={` ${className} ${textStyles.color[color]} ${textStyles.size[size]} ${textStyles.weight[weight]} `}
     >
       {children}
     </h1>
