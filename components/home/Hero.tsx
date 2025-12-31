@@ -7,7 +7,7 @@ import HumanizerField from "../custom/HumanizerField";
 const Hero = () => {
   return (
     <section className="bg-black min-h-screen">
-      <div className="max-w-[1200px] px-6 mx-auto lg:pt-[62px] pt-[30px] pb-[103px]">
+      <div className="max-w-[1200px] px-6 mx-auto lg:pt-[62px] pt-[30px] lg:pb-[103px] pb-[42px]">
         <Navbar />
 
         <div className="max-w-[823px] mx-auto text-white text-center lg:mb-16 mb-8">
