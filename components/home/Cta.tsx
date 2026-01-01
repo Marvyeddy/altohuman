@@ -10,7 +10,7 @@ import { useMobile } from "@/hooks/useMobile";
 const Cta = () => {
   const isMobile = useMobile();
   return (
-    <section className="min-h-screen bg-black pb-[88px]">
+    <section className="bg-black pb-[88px] lg:pb-[145px]">
       <div className="max-w-[1200px] mx-auto lg:pt-[167px] pt-[88px] flex max-lg:flex-col items-center px-6 ">
         <div className="lg:w-fit max-lg:w-full">
           <Typography.H1 color="white">
