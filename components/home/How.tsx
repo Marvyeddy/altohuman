@@ -20,9 +20,9 @@ const How = () => {
   const Svg = [Gpt, Gemini, Brain, Coursera, Alexa, Meta, Glow];
 
   return (
-    <section className="min-h-screen">
-      <div className="max-w-[1200px] px-6 mx-auto lg:mb-[100px] mb-[88px]">
-        <div className="w-fit text-center space-y-3 mx-auto mt-[100px] mb-10">
+    <section className="lg:py-[100px] py-[88px]">
+      <div className="max-w-[1200px] px-6 mx-auto">
+        <div className="w-fit text-center space-y-3 mx-auto mb-10">
           <Typography.H2>Why Choose Altohuman </Typography.H2>
           <Typography.P color="custom-1">
             Get your result instantly

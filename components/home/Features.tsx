@@ -10,19 +10,19 @@ import Success from "@/public/assets/button-success.svg";
 
 const How = () => {
   return (
-    <section id="how" className="min-h-screen">
+    <section id="how" className="lg:py-[120px] py-[60px]">
       <div className="max-w-[1200px] mx-auto px-6">
-        <div className="w-fit mx-auto text-center lg:mt-[102px] mt-[60px] space-y-3 lg:mb-10 mb-6">
+        <div className="w-fit mx-auto text-center space-y-3 lg:mb-10 mb-6">
           <Typography.H2>How Altohuman Works</Typography.H2>
           <Typography.P>Get your result instantly</Typography.P>
         </div>
 
-        <div className="flex max-lg:flex-col lg:gap-x-6 gap-3 lg:mb-[102px] mb-[60px] md:max-w-sm lg:max-w-none md:mx-auto">
+        <div className="flex max-lg:flex-col lg:gap-x-6 gap-3 md:max-w-sm lg:max-w-none md:mx-auto">
           {/* Card 1 */}
           <div className="bg-[#F7F7F7] flex-1 h-[446px]">
             <div className="space-y-3 px-[21px] pt-[32px]">
               <Typography.H3>Paste or upload AI content</Typography.H3>
-              <Typography.P color='custom-1'>
+              <Typography.P color="custom-1">
                 Easily paste your text or upload a file to get started from any
                 AI
               </Typography.P>

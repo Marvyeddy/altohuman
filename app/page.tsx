@@ -3,6 +3,7 @@ import Feature from "@/components/home/Features";
 import How from "@/components/home/How";
 import Cta from "@/components/home/Cta";
 import Pricing from "@/components/home/Pricing";
+import Faq from "@/components/home/Faq";
 
 const HomePage = () => {
   return (
@@ -12,6 +13,7 @@ const HomePage = () => {
       <How />
       <Cta />
       <Pricing />
+      <Faq />
     </div>
   );
 };
