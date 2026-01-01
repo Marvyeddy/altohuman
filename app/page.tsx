@@ -5,6 +5,7 @@ import Cta from "@/components/home/Cta";
 import Pricing from "@/components/home/Pricing";
 import Faq from "@/components/home/Faq";
 import Transform from "@/components/home/Transform";
+import Footer from "@/components/home/Footer";
 
 const HomePage = () => {
   return (
@@ -16,6 +17,7 @@ const HomePage = () => {
       <Pricing />
       <Faq />
       <Transform />
+      <Footer />
     </div>
   );
 };
