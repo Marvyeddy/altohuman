@@ -10,7 +10,7 @@ import Success from "@/public/assets/button-success.svg";
 
 const How = () => {
   return (
-    <section id="how" className="lg:py-[120px] py-[60px]">
+    <section id="features" className="lg:py-[120px] py-[60px]">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="w-fit mx-auto text-center space-y-3 lg:mb-10 mb-6">
           <Typography.H2>How Altohuman Works</Typography.H2>

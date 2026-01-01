@@ -32,7 +32,7 @@ const Faq = () => {
     },
   ];
   return (
-    <section className="lg:py-[120px] py-[88px] bg-[#F6F6F6]">
+    <section id="faqs" className="lg:py-[120px] py-[88px] bg-[#F6F6F6]">
       <div className="max-w-[650px] mx-auto px-6">
         <div className="text-center w-fit mx-auto space-y-3 mb-10">
           <Typography.H2>Frequently asked Questions</Typography.H2>

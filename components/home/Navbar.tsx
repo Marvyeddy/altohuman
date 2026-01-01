@@ -8,14 +8,11 @@ import Link from "next/link";
 import { useMobile } from "@/hooks/useMobile";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { X } from "lucide-react";
 
 const Navbar = () => {
   const isMobile = useMobile();

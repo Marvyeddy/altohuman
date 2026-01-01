@@ -46,7 +46,7 @@ const Pricing = () => {
     },
   ];
   return (
-    <section className="lg:py-[120px] py-[88px]">
+    <section id="pricing" className="lg:py-[120px] py-[88px]">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="text-center space-y-3 max-lg:w-[278px] mx-auto">
           <Typography.H2>Straight-forward pricing</Typography.H2>
