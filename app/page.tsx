@@ -1,6 +1,7 @@
 import Hero from "@/components/home/Hero";
 import Feature from "@/components/home/Features";
 import How from "@/components/home/How";
+import Cta from "@/components/home/Cta";
 
 const HomePage = () => {
   return (
@@ -8,6 +9,7 @@ const HomePage = () => {
       <Hero />
       <Feature />
       <How />
+      <Cta />
     </div>
   );
 };

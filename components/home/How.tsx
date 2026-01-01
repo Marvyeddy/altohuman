@@ -21,7 +21,7 @@ const How = () => {
 
   return (
     <section className="min-h-screen">
-      <div className="max-w-[1200px] px-6 mx-auto">
+      <div className="max-w-[1200px] px-6 mx-auto lg:mb-[100px] mb-[88px]">
         <div className="w-fit text-center space-y-3 mx-auto mt-[100px] mb-10">
           <Typography.H2>Why Choose Altohuman </Typography.H2>
           <Typography.P color="custom-1">
