@@ -4,6 +4,7 @@ import How from "@/components/home/How";
 import Cta from "@/components/home/Cta";
 import Pricing from "@/components/home/Pricing";
 import Faq from "@/components/home/Faq";
+import Transform from "@/components/home/Transform";
 
 const HomePage = () => {
   return (
@@ -14,6 +15,7 @@ const HomePage = () => {
       <Cta />
       <Pricing />
       <Faq />
+      <Transform />
     </div>
   );
 };
