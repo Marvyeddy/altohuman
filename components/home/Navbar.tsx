@@ -70,6 +70,22 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
+
+          <div className="flex flex-col gap-4 mt-4">
+            <Button
+              asChild
+              variant="link"
+              className="text-black font-semibold text-lg px-0 justify-center"
+            >
+              <a href="/login">Log in</a>
+            </Button>
+            <Button
+              className="bg-black text-white rounded-full font-extrabold text-lg py-2 w-fit mx-auto"
+              asChild
+            >
+              <a href="/register">Get started</a>
+            </Button>
+          </div>
         </SheetContent>
       </Sheet>
     </nav>
@@ -92,10 +108,10 @@ const Navbar = () => {
 
       <div className="justify-end space-x-2 flex items-center flex-1">
         <Button className="text-white" variant={"link"}>
-          Log in
+          <a href="/login">Log in</a>
         </Button>
         <Button className="bg-white rounded-full font-extrabold">
-          Get started
+          <a href="/register">Get started</a>
         </Button>
       </div>
     </nav>

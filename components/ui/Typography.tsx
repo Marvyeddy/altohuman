@@ -13,6 +13,7 @@ const textStyles = {
   weight: {
     extrabold: "font-extrabold",
     light: "font-light",
+    regular: "font-regular",
   },
   color: {
     white: "text-white",
@@ -55,7 +56,7 @@ function H2({
 }: HeaderProps) {
   return (
     <h2
-      className={`${textStyles.color[color]} ${textStyles.size[size]} ${textStyles.weight[weight]} ${className}`}
+      className={`${className} ${textStyles.color[color]} ${textStyles.size[size]} ${textStyles.weight[weight]}`}
     >
       {children}
     </h2>
