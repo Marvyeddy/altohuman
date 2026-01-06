@@ -129,7 +129,11 @@ const Register = () => {
                       type="button"
                       onClick={onVisible}
                     >
-                      {visible ? <EyeClosedIcon /> : <EyeIcon />}
+                      {visible ? (
+                        <EyeClosedIcon className="text-[#00000063]" />
+                      ) : (
+                        <EyeIcon className="text-[#00000063]" />
+                      )}
                     </Button>
                   </div>
                   {errors.password && (
