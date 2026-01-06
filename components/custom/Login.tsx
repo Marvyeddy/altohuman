@@ -121,7 +121,7 @@ const Login = () => {
             />
 
             <div className="w-fit ml-auto">
-              <Link className="text-sm opacity-80" href="/">
+              <Link className="text-sm opacity-80" href="/forget-password">
                 Forgot Password?
               </Link>
             </div>
