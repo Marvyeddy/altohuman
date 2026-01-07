@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 const CurrentPlan = () => {
   return (
-    <div className="border border-[#E8E8E8] rounded-[20px] p-6 flex justify-between items-center mb-[13px]">
+    <div className="border border-[#E8E8E8] rounded-[20px] p-6 flex justify-between mb-[13px]">
       <Typography.P size="sm" className="uppercase" weight="extrabold">
         current plan
       </Typography.P>

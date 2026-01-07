@@ -9,8 +9,8 @@ import Profile from "@/public/assets/profile.svg";
 const AccountPage = () => {
   return (
     <div className="w-full">
-      <nav className="flex items-center justify-between px-[120px] py-6 pt-[15px] border-b border-[#E8E8E8] mb-[77px]">
-        <div className="flex-1">
+      <nav className="flex items-center justify-between lg:px-[120px] py-6 pt-[15px] border-b border-[#E8E8E8] mb-[77px]">
+        <div className="lg:flex-1">
           <Link
             href={"/"}
             className="flex items-center w-fit gap-1 hover:underline underline-offset-4"
@@ -20,9 +20,9 @@ const AccountPage = () => {
           </Link>
         </div>
 
-        <Image src={Logo} alt="dark-logo" />
+        <Image src={Logo} alt="dark-logo" className="max-md:hidden" />
 
-        <div className="flex-1 flex justify-end ">
+        <div className="lg:flex-1 flex justify-end ">
           <Button variant={"link"}>Log out</Button>
         </div>
       </nav>

@@ -16,7 +16,7 @@ const AccountLayout = ({
   return (
     <section className="min-h-screen w-full">
       {children}
-      <div className="max-w-[720px] mx-auto">
+      <div className="max-w-[720px] mx-auto px-6">
         <>{current}</>
         <>{personal}</>
         <>{security}</>
