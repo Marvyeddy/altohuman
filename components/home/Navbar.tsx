@@ -14,6 +14,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
+const auth = false;
+
 const Navbar = () => {
   const isMobile = useMobile();
   const Navlinks = [
@@ -71,21 +73,39 @@ const Navbar = () => {
             ))}
           </ul>
 
-          <div className="flex flex-col gap-4 mt-4">
-            <Button
-              asChild
-              variant="link"
-              className="text-black font-semibold text-lg px-0 justify-center"
-            >
-              <a href="/login">Log in</a>
-            </Button>
-            <Button
-              className="bg-black text-white rounded-full font-extrabold text-lg py-2 w-fit mx-auto"
-              asChild
-            >
-              <a href="/register">Get started</a>
-            </Button>
-          </div>
+          {auth ? (
+            <div className="flex flex-col gap-4 mt-4">
+              <Button
+                asChild
+                variant="link"
+                className="text-black font-semibold text-lg px-0 justify-center"
+              >
+                <a href="/">Log out</a>
+              </Button>
+              <Button
+                className="bg-black text-white rounded-full font-extrabold text-lg py-2 w-fit mx-auto"
+                asChild
+              >
+                <a href="/account">My account</a>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4 mt-4">
+              <Button
+                asChild
+                variant="link"
+                className="text-black font-semibold text-lg px-0 justify-center"
+              >
+                <a href="/login">Log in</a>
+              </Button>
+              <Button
+                className="bg-black text-white rounded-full font-extrabold text-lg py-2 w-fit mx-auto"
+                asChild
+              >
+                <a href="/register">Get started</a>
+              </Button>
+            </div>
+          )}
         </SheetContent>
       </Sheet>
     </nav>
@@ -106,14 +126,25 @@ const Navbar = () => {
         ))}
       </ul>
 
-      <div className="justify-end space-x-2 flex items-center flex-1">
-        <Button className="text-white" variant={"link"}>
-          <a href="/login">Log in</a>
-        </Button>
-        <Button className="bg-white rounded-full font-extrabold">
-          <a href="/register">Get started</a>
-        </Button>
-      </div>
+      {auth ? (
+        <div className="justify-end space-x-2 flex items-center flex-1">
+          <Button variant={"link"} className="text-white">
+            Log out
+          </Button>
+          <Button className="font-extrabold bg-white rounded-full" asChild>
+            <Link href={"/account"}>My Account</Link>
+          </Button>
+        </div>
+      ) : (
+        <div className="justify-end space-x-2 flex items-center flex-1">
+          <Button className="text-white" variant={"link"}>
+            <a href="/login">Log in</a>
+          </Button>
+          <Button className="bg-white rounded-full font-extrabold">
+            <a href="/register">Get started</a>
+          </Button>
+        </div>
+      )}
     </nav>
   );
 };

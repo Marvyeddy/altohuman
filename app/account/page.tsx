@@ -12,7 +12,7 @@ const AccountPage = () => {
       <nav className="flex items-center justify-between lg:px-[120px] py-6 pt-[15px] border-b border-[#E8E8E8] mb-[77px]">
         <div className="lg:flex-1">
           <Link
-            href={"/"}
+            href={"/dashboard"}
             className="flex items-center w-fit gap-1 hover:underline underline-offset-4"
           >
             <ChevronLeft />

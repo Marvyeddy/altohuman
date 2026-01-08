@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import Typography from "../ui/Typography";
 import Star from "@/public/assets/hero-sparkle.svg";
 import HumanizerField from "./HumanizerField";
+import Link from "next/link";
 
 const Dashboard = () => {
   return (
@@ -16,8 +17,8 @@ const Dashboard = () => {
             <Button variant={"link"} className="text-white">
               Log out
             </Button>
-            <Button className="font-extrabold bg-white rounded-full">
-              My Account
+            <Button className="font-extrabold bg-white rounded-full" asChild>
+              <Link href={"/account"}>My Account</Link>
             </Button>
           </div>
         </nav>
@@ -39,8 +40,11 @@ const Dashboard = () => {
             <Typography.P color="white" className="font-semibold">
               200 credits
             </Typography.P>
-            <Button className="bg-white rounded-full py-1 px-2 text-xs font-extrabold ">
-              Buy
+            <Button
+              className="bg-white rounded-full py-1 px-2 text-xs font-extrabold "
+              asChild
+            >
+              <Link href={"/pricing"}>Buy</Link>
             </Button>
           </div>
         </div>

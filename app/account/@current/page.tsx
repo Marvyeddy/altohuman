@@ -2,6 +2,7 @@ import Typography from "@/components/ui/Typography";
 import Image from "next/image";
 import Coin from "@/public/assets/coin.svg";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const CurrentPlan = () => {
   return (
@@ -18,8 +19,8 @@ const CurrentPlan = () => {
             400
           </div>
         </div>
-        <Button className="bg-black rounded-full text-white">
-          Change plan
+        <Button className="bg-black rounded-full text-white" asChild>
+          <Link href={"/pricing"}>Change plan</Link>
         </Button>
       </div>
     </div>

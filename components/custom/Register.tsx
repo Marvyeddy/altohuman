@@ -58,7 +58,10 @@ const Register = () => {
           </h2>
           <Typography.P className="text-center mb-8">
             Already have an account?{" "}
-            <Link href={"/login"} className="font-normal">
+            <Link
+              href={"/login"}
+              className="font-normal hover:underline hover:font-extrabold underline-offset-2"
+            >
               Log in
             </Link>
           </Typography.P>
