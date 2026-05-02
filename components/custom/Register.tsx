@@ -16,7 +16,7 @@ import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner"; // or your preferred toast library
+import { toast } from "sonner";
 
 
 const Register = () => {
