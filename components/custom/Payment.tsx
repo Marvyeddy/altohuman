@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Logo from "@/public/assets/logo-dark.svg";
 import Link from "next/link";
@@ -10,8 +12,10 @@ import Thunder from "@/public/assets/thunder.svg";
 import Check from "@/public/assets/check.svg";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { authClient } from "@/lib/auth-client";
 
 const Payment = () => {
+  const { data: session } = authClient.useSession();
   const price = [
     {
       name: "Starter",
@@ -85,10 +89,10 @@ const Payment = () => {
 
               <div className="max-md:hidden">
                 <Typography.P className="font-medium">
-                  James Michealson
+                  {session?.user.name}
                 </Typography.P>
                 <Typography.P size="sm" className="font-medium opacity-45">
-                  jamesmicheal@gmail.com
+                  {session?.user.email}
                 </Typography.P>
               </div>
             </div>
@@ -116,7 +120,7 @@ const Payment = () => {
                 <div
                   className={cn(
                     "flex max-md:flex-col p-4 rounded-lg gap-7 border border-[#00000026]",
-                    myPlan && "bg-[#F7F7F7] border-[#F7F7F7]"
+                    myPlan && "bg-[#F7F7F7] border-[#F7F7F7]",
                   )}
                   key={idx}
                 >
@@ -147,7 +151,7 @@ const Payment = () => {
                     <Button
                       className={cn(
                         `text-white bg-black rounded-full`,
-                        myPlan && "bg-red-500 text-white"
+                        myPlan && "bg-red-500 text-white",
                       )}
                       size={"sm"}
                     >

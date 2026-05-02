@@ -12,10 +12,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-const auth = false;
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
+  const { useSession, signOut } = authClient;
+  const router = useRouter();
+
   const Navlinks = [
     {
       text: "Features",
@@ -35,9 +38,23 @@ const Navbar = () => {
     },
   ];
 
+  const { data: session } = useSession();
+
+  const signout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+          router.refresh();
+          // redirect to login page
+        },
+      },
+    });
+  };
+
   return (
     <div>
-        //? MOBILE //
+      //? MOBILE //
       <nav className="flex justify-between items-center mb-[59px] lg:hidden">
         <Link className="flex-1" href={"/"}>
           <Image src={Logo} alt="logo" width={24} height={24} loading="eager" />
@@ -46,7 +63,7 @@ const Navbar = () => {
         <Sheet>
           <SheetTrigger>
             <div>
-              <Image src={Menu} alt="hamburger-menu" loading="eager"/>
+              <Image src={Menu} alt="hamburger-menu" loading="eager" />
             </div>
           </SheetTrigger>
           <SheetContent
@@ -73,15 +90,16 @@ const Navbar = () => {
               ))}
             </ul>
 
-            {auth ? (
+            {session ? (
               <div className="flex flex-col gap-4 mt-4">
                 <Button
-                  asChild
                   variant="link"
                   className="text-black font-semibold text-lg px-0 justify-center"
+                  onClick={signout}
                 >
-                  <a href="/">Log out</a>
+                  Log out
                 </Button>
+
                 <Button
                   className="bg-black text-white rounded-full font-extrabold text-lg py-2 w-fit mx-auto"
                   asChild
@@ -109,27 +127,34 @@ const Navbar = () => {
           </SheetContent>
         </Sheet>
       </nav>
-    
       //? DESKTOP //
       <nav className="flex justify-between mb-[85px] max-lg:hidden">
         <Link className="flex-1" href={"/"}>
           <Image src={Logo} alt="logo" />
         </Link>
 
-        <ul className="flex justify-center items-center space-x-8 flex-2">
-          {Navlinks.map((item, idx) => (
-            <li
-              key={idx}
-              className="text-white hover:opacity-50 transition-colors"
-            >
-              <a href={item.link}>{item.text}</a>
+        {session ? (
+          <ul>
+            <li className="text-white hover:opacity-50 transition-colors">
+              <a href="/dashboard">Dashboard</a>
             </li>
-          ))}
-        </ul>
+          </ul>
+        ) : (
+          <ul className="flex justify-center items-center space-x-8 flex-2">
+            {Navlinks.map((item, idx) => (
+              <li
+                key={idx}
+                className="text-white hover:opacity-50 transition-colors"
+              >
+                <a href={item.link}>{item.text}</a>
+              </li>
+            ))}
+          </ul>
+        )}
 
-        {auth ? (
+        {session ? (
           <div className="justify-end space-x-2 flex items-center flex-1">
-            <Button variant={"link"} className="text-white">
+            <Button variant={"link"} className="text-white" onClick={signout}>
               Log out
             </Button>
             <Button className="font-extrabold bg-white rounded-full" asChild>
@@ -148,7 +173,6 @@ const Navbar = () => {
         )}
       </nav>
     </div>
-    
   );
 };
 

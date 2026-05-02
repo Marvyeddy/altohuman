@@ -1,3 +1,5 @@
+"use client";
+
 import Typography from "@/components/ui/Typography";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
@@ -5,8 +7,23 @@ import Link from "next/link";
 import Logo from "@/public/assets/logo-dark.svg";
 import { Button } from "@/components/ui/button";
 import Profile from "@/public/assets/profile.svg";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const AccountPage = () => {
+  const router = useRouter();
+
+  const signout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+          router.refresh();
+          // redirect to login page
+        },
+      },
+    });
+  };
   return (
     <div className="w-full">
       <nav className="flex items-center justify-between lg:px-[120px] py-6 pt-[15px] border-b border-[#E8E8E8] mb-[77px]">
@@ -23,7 +40,9 @@ const AccountPage = () => {
         <Image src={Logo} alt="dark-logo" className="max-md:hidden" />
 
         <div className="lg:flex-1 flex justify-end ">
-          <Button variant={"link"}>Log out</Button>
+          <Button variant={"link"} onClick={signout}>
+            Log out
+          </Button>
         </div>
       </nav>
 

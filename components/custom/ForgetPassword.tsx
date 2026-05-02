@@ -13,6 +13,9 @@ import { Input } from "../ui/input";
 import Typography from "../ui/Typography";
 import Lock from "@/public/assets/lock.svg";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 
 const ForgetPassword = () => {
   const router = useRouter();
@@ -28,7 +31,13 @@ const ForgetPassword = () => {
   });
 
   const onSubmit = async (data: ForgetPasswordData) => {
-    console.log(data);
+    const { error } = await authClient.requestPasswordReset({
+      email: data.email,
+      redirectTo: "/reset-password", // Where the email link will point
+    });
+
+    if (error) toast.error(error.message);
+    else toast.success("Check your email!");
   };
 
   return (
@@ -71,7 +80,7 @@ const ForgetPassword = () => {
             />
 
             <Button className="bg-black text-white font-bold rounded-full mt-6 max-lg:mt-3">
-              Next
+              {isSubmitting ? <Loader2Icon className="animate-spin" /> : "Next"}
             </Button>
 
             <Button

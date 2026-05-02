@@ -15,6 +15,8 @@ import { CircleXIcon, EyeClosedIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 const Login = () => {
   const [visible, setVisible] = useState(false);
@@ -37,8 +39,29 @@ const Login = () => {
   });
 
   async function onSubmit(data: LoginFormData) {
-    console.log(data);
+    await authClient.signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+        callbackURL: "/dashboard",
+      },
+      {
+        onSuccess: () => {
+          toast.success("Login successfully..");
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+      },
+    );
   }
+
+  const handleGoogleSignUp = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
+  };
 
   return (
     <section className="min-h-screen w-full">
@@ -135,6 +158,7 @@ const Login = () => {
             <Button
               className="font-bold rounded-full border border-[#CDD0D5]"
               type="button"
+              onClick={handleGoogleSignUp}
             >
               <Image src={Google} alt="google-svg" className="mr-4" />
               Continue with Google

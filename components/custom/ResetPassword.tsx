@@ -9,12 +9,14 @@ import { Input } from "../ui/input";
 import Typography from "../ui/Typography";
 import Lock from "@/public/assets/lock.svg";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 import {
   ResetPasswordData,
   resetpasswordschema,
 } from "@/schema/reset-password";
 import { useState } from "react";
-import { EyeClosedIcon, EyeIcon } from "lucide-react";
+import { EyeClosedIcon, EyeIcon, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 const ResetPassword = () => {
   const [visible, setVisible] = useState(false);
@@ -31,7 +33,26 @@ const ResetPassword = () => {
   });
 
   const onSubmit = async (data: ResetPasswordData) => {
-    console.log(data);
+    const token = new URLSearchParams(window.location.search).get("token");
+
+    if (!token) {
+      toast.warning("Invalid or missing reset token.");
+      return;
+    }
+
+    const { error } = await authClient.resetPassword({
+      newPassword: data.password,
+      token,
+    });
+
+    if (error) {
+      toast.error(error.message || "Failed to reset password");
+      return;
+    }
+
+    toast.success("Password reset successfully!");
+
+    window.location.href = "/login";
   };
 
   const onVisible = () => {
@@ -92,7 +113,7 @@ const ResetPassword = () => {
             />
 
             <Button className="bg-black text-white font-bold rounded-full mt-6 max-lg:mt-3">
-              Reset
+              {isSubmitting ? <Loader2 className="animate-spin" /> : "Reset"}
             </Button>
           </form>
         </div>

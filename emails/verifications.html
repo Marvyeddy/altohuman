@@ -1,9 +1,85 @@
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Verify Your Email - Altohuman</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+      body {
+        background: #181818;
+        font-family: 'Inter', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 420px;
+        margin: 50px auto;
+        background: #212121;
+        border-radius: 16px;
+        box-shadow: 0 6px 32px rgba(0,0,0,0.19), 0 1.5px 2.5px rgba(255,255,255,0.03);
+        padding: 40px 32px 32px 32px;
+        text-align: center;
+      }
+      .logo {
+        width: 52px;
+        margin-bottom: 18px;
+      }
+      h1 {
+        color: #fff;
+        font-size: 1.6rem;
+        letter-spacing: 0.01em;
+        margin-bottom: 8px;
+      }
+      p {
+        color: #b3b3b3;
+        margin-bottom: 32px;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      .btn {
+        display: inline-block;
+        background: #fff;
+        color: #181818;
+        text-decoration: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: background 0.2s, color 0.2s;
+        box-shadow: 0 2px 12px 0 rgba(255,255,255,0.06);
+        margin-bottom: 18px;
+      }
+      .btn:hover {
+        background: #e2e2e2;
+        color: #000;
+      }
+      .footer {
+        margin-top: 26px;
+        color: #7b7b7b;
+        font-size: 0.95rem;
+      }
+      @media (max-width: 500px) {
+        .container {
+          padding: 24px 8px 18px 8px;
+        }
+      }
+    </style>
+  </head>
   <body>
-    <h1>Welcome, {{name}}!</h1>
-    <p>Please verify your email for Altohuman by clicking the button below:</p>
-    <a href="{{url}}" style="background: black; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">
-      Verify Email
-    </a>
+    <div class="container">
+      <img class="logo" src="https://altohuman.site/assets/Logo.svg" alt="Altohuman Logo" />
+      <h1>Welcome, {{name}}!</h1>
+      <p>
+        Please confirm your Altohuman account by verifying your email. Just click the button below to finish signing up.
+      </p>
+      <a href="{{url}}" class="btn">Verify Email</a>
+      <div class="footer">
+        If the button doesn't work, copy and paste the following link into your browser:<br>
+        <span style="word-break:break-all; color:#b3b3b3;">{{url}}</span>
+        <br><br>
+        Thanks,<br>
+        The Altohuman Team
+      </div>
+    </div>
   </body>
 </html>

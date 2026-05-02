@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Logo from "@/public/assets/Logo.svg";
 import { Button } from "../ui/button";
@@ -5,8 +7,24 @@ import Typography from "../ui/Typography";
 import Star from "@/public/assets/hero-sparkle.svg";
 import HumanizerField from "./HumanizerField";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
+  const { useSession } = authClient;
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+          router.refresh();
+        },
+      },
+    });
+  };
   return (
     <section className="min-h-screen bg-black w-full">
       <div className="max-w-[1120px] mx-auto px-6 py-6">
@@ -14,7 +32,11 @@ const Dashboard = () => {
           <Image src={Logo} alt="logo-image" />
 
           <div className="space-x-3">
-            <Button variant={"link"} className="text-white">
+            <Button
+              variant={"link"}
+              className="text-white"
+              onClick={handleSignOut}
+            >
               Log out
             </Button>
             <Button className="font-extrabold bg-white rounded-full" asChild>
@@ -26,7 +48,7 @@ const Dashboard = () => {
         <div className="flex max-lg:flex-col lg:justify-between lg:items-center gap-4 mb-[76px]">
           <div>
             <Typography.H1 color="white">
-              Hey Mark
+              Hey {session?.user.name.split(" ")[0]}
               <Image src={Star} alt="star" className="inline-block ml-6" />
             </Typography.H1>
             <Typography.P color="white" className="max-w-[644px] mt-5">

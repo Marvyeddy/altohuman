@@ -11,7 +11,23 @@ export const auth = betterAuth({
     }),
     emailAndPassword: { 
         enabled: true,
-        requireEmailVerification: true
+        requireEmailVerification: true,
+        revokeSessionsOnPasswordReset: true, 
+        sendResetPassword: async ({ user, url, token }, request) => {
+            const html = getEmailTemplate("forgotPassword", {
+                name: user.name,
+                url: url
+            });
+
+            await resend.emails.send({
+                // MUST match your verified subdomain
+                from: "Altohuman <onboarding@mail.altohuman.site>", 
+                to: user.email,
+                subject: "Reset your password - Altohuman",
+                html: html,
+            });
+        },
+
       }, 
       emailVerification: {
         sendOnSignUp: true,
