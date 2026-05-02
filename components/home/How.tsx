@@ -32,7 +32,7 @@ const How = () => {
         <ul className="flex items-center space-x-2 w-fit mx-auto mb-10">
           {Svg.map((img, idx) => (
             <figure key={idx}>
-              <Image src={img} alt="image" />
+              <Image src={img} alt="image" loading="eager"/>
             </figure>
           ))}
         </ul>
@@ -45,6 +45,7 @@ const How = () => {
                 src={Ai}
                 alt="ai"
                 className="w-10 h-10 max-sm:w-8 max-sm:h-8"
+                loading="eager"
               />
               <div className="space-y-3 w-[464px] max-w-full max-sm:w-full">
                 <Typography.H3>AI content detection</Typography.H3>
@@ -54,7 +55,12 @@ const How = () => {
                 </Typography.P>
               </div>
             </div>
-            <Image src={Img2} alt="img2" className="w-full h-auto" />
+            <Image
+              src={Img2}
+              alt="img2"
+              className="h-auto w-full"
+              loading="eager"
+            />
           </div>
 
           {/* second */}
@@ -64,6 +70,7 @@ const How = () => {
                 src={Lock}
                 alt="lock"
                 className="w-10 h-10 max-sm:w-8 max-sm:h-8"
+                loading="eager"
               />
               <div className="space-y-3 w-[371px] max-w-full max-sm:w-full">
                 <Typography.H3>Secure and reliable</Typography.H3>
@@ -73,7 +80,15 @@ const How = () => {
                 </Typography.P>
               </div>
             </div>
-            <Image src={Img3} alt="img3" className="w-full h-auto" />
+            <Image
+              src={Img3}
+              alt="img3"
+              width={Img3.width}
+              height={Img3.height}
+              className="h-auto w-full"
+              style={{ height: "auto" }}
+              loading="eager"
+            />
           </div>
         </div>
 
@@ -85,6 +100,7 @@ const How = () => {
                 src={Click}
                 alt="click"
                 className="w-10 h-10 max-sm:w-8 max-sm:h-8"
+                loading="eager"
               />
               <div className="space-y-3 w-[371px] max-w-full max-sm:w-full">
                 <Typography.H3>Easy to use</Typography.H3>
@@ -94,7 +110,15 @@ const How = () => {
                 </Typography.P>
               </div>
             </div>
-            <Image src={Img4} alt="img4" className="w-full h-auto" />
+            <Image
+              src={Img4}
+              alt="img4"
+              width={Img4.width}
+              height={Img4.height}
+              className="h-auto w-full"
+              style={{ height: "auto" }}
+              loading="eager"
+            />
           </div>
 
           {/* fourth */}
@@ -104,6 +128,7 @@ const How = () => {
                 src={Humanize}
                 alt="humanize"
                 className="w-10 h-10 max-sm:w-8 max-sm:h-8"
+                loading="eager"
               />
               <div className="space-y-3 w-[464px] max-w-full max-sm:w-full">
                 <Typography.H3>Humanized AI text</Typography.H3>
@@ -113,7 +138,15 @@ const How = () => {
                 </Typography.P>
               </div>
             </div>
-            <Image src={Img5} alt="img5" className="w-full h-auto" />
+            <Image
+              src={Img5}
+              alt="img5"
+              width={Img5.width}
+              height={Img5.height}
+              className="h-auto w-full"
+              style={{ height: "auto" }}
+              loading="eager"
+            />
           </div>
         </div>
       </div>

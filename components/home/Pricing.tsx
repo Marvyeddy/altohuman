@@ -61,8 +61,16 @@ const Pricing = () => {
             <div key={idx} className="flex-1">
               <div className="space-y-6 bg-[#F7F7F7] px-[18px] py-4">
                 <div className="flex gap-3">
-                  <Image src={item.img} alt="price-icon" />
+                  <Image
+                    src={item.img}
+                    alt="price-icon"
+                    width={32}
+                    height={32}
+                    className="size-6 shrink-0 object-contain"
+                    loading="eager"
+                  />
                   <Typography.H4>{item.name}</Typography.H4>
+            
                 </div>
 
                 <Typography.H3>₦{item.amount}</Typography.H3>
@@ -82,7 +90,14 @@ const Pricing = () => {
                 <ul className="flex flex-col gap-[18px]">
                   {item.list.map((list, idx1) => (
                     <li key={idx1} className="flex space-x-2">
-                      <Image src={Check} alt="check" />
+                      <Image
+                        src={Check}
+                        alt="check"
+                        width={22}
+                        height={22}
+                        className="size-[22px] shrink-0"
+                        loading="eager"
+                      />
                       <Typography.P>{list}</Typography.P>
                     </li>
                   ))}

@@ -83,7 +83,7 @@ const Payment = () => {
             <div className="flex items-center gap-4 py-[9px] px-3 border border-[#00000036] rounded-full w-fit ml-auto">
               <Image src={Avatar} alt="avatar" />
 
-              <div>
+              <div className="max-md:hidden">
                 <Typography.P className="font-medium">
                   James Michealson
                 </Typography.P>
@@ -115,7 +115,7 @@ const Payment = () => {
               return (
                 <div
                   className={cn(
-                    "flex p-4 rounded-lg gap-7 border border-[#00000026]",
+                    "flex max-md:flex-col p-4 rounded-lg gap-7 border border-[#00000026]",
                     myPlan && "bg-[#F7F7F7] border-[#F7F7F7]"
                   )}
                   key={idx}
@@ -125,7 +125,9 @@ const Payment = () => {
                       <Image
                         src={item.img}
                         alt={item.name}
-                        className="size-[20px]"
+                        width={32}
+                        height={32}
+                        className="size-5 shrink-0 object-contain"
                       />
                       <Typography.P className="font-semibold">
                         {item.name}
@@ -158,7 +160,13 @@ const Payment = () => {
                     <ul className="space-y-2">
                       {item.list.map((i, idx2) => (
                         <li key={idx2} className="flex items-center gap-2">
-                          <Image src={Check} alt="check" />
+                          <Image
+                            src={Check}
+                            alt="check"
+                            width={22}
+                            height={22}
+                            className="size-[22px] shrink-0"
+                          />
                           {i}
                         </li>
                       ))}

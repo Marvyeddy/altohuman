@@ -14,9 +14,15 @@ import { Button } from "../ui/button";
 import Google from "@/public/assets/google.svg";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner"; // or your preferred toast library
+
 
 const Register = () => {
+  const [isEmailSent, setIsEmailSent] = useState(false);
   const [visible, setVisible] = useState(false);
+  const router = useRouter()
 
   const onVisible = () => {
     setVisible((prev) => !prev);
@@ -37,20 +43,63 @@ const Register = () => {
   });
 
   const onSubmit = async (data: RegisterFormData) => {
-    console.log("Register data:", data);
-    // call API here
+    const {error} = await authClient.signUp.email({
+      email: data.email,
+      password: data.password,
+      name: data.fullname,
+      callbackURL: "/dashboard"
+    }, {
+      onRequest: () => console.log("Sending..."),
+      onSuccess: () => {
+        setIsEmailSent(true);
+        toast.success("Verification email sent! Please check your inbox.");
+      },
+     })
   };
+
+  //*GOOGLE SIGNIN
+  const handleGoogleSignIn = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/dashboard",
+    });
+  };
+
+  if (isEmailSent) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">
+        <h2 className="text-2xl font-bold">Check your email! 📧</h2>
+        <p className="mt-2 text-gray-600">
+          We've sent a verification link to your email address. 
+          Please verify it to continue to your dashboard.
+        </p>
+        <Button className="mt-4" onClick={() => router.push("/login")}>
+          Back to Login
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <section className="w-full min-h-screen flex">
       <div className="flex-1 p-5 max-lg:hidden">
-        <Image src={Img} alt="register-img" loading="lazy" />
+        <Image
+          src={Img}
+          alt="register-img"
+          width={Img.width}
+          height={Img.height}
+          priority
+          className="h-auto w-full object-cover"
+          style={{ height: "auto" }}
+        />
       </div>
       <div className="flex-1 flex flex-col justify-center">
         <div className="max-w-[408px] mx-auto">
           <Image
             src={Star}
             alt="star-asset"
+            width={76}
+            height={76}
             className="mx-auto max-lg:size-[45px]"
           />
           <h2 className="font-bold lg:text-[32px] text-[24px] text-center mt-8 mb-4">
@@ -178,11 +227,12 @@ const Register = () => {
             />
 
             <Button className="bg-black text-white font-bold rounded-full mt-8 max-lg:mt-3">
-              Sign up
+              {isSubmitting ? "Creating account...": "Sign up"}
             </Button>
             <Button
               className="font-bold rounded-full border border-[#CDD0D5] mb-8"
               type="button"
+              onClick={handleGoogleSignIn}
             >
               <Image src={Google} alt="google-svg" className="mr-4" />
               Sign up with Google

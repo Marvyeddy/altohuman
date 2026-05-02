@@ -44,14 +44,14 @@ const Footer = () => {
               size={"icon-lg"}
               className="bg-[#0014330A] rounded-full max-lg:w-full flex-1"
             >
-              <Image src={Linkedin} alt="linkedin" />
+              <Image src={Linkedin} alt="linkedin" loading="eager"/>
             </Button>
 
             <Button
               size={"icon-lg"}
               className="bg-[#0014330A] rounded-full max-lg:w-full flex-1"
             >
-              <Image src={Twitter} alt="twitter" />
+              <Image src={Twitter} alt="twitter" loading="eager"/>
             </Button>
           </div>
         </div>

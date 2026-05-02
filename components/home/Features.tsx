@@ -31,7 +31,11 @@ const How = () => {
             <Image
               src={Image1}
               alt="img-1"
-              className="lg:mt-[63px] mt-10 w-full h-auto"
+              width={Image1.width}
+              height={Image1.height}
+              className="mt-10 h-auto w-full lg:mt-[63px]"
+              style={{ height: "auto" }}
+              loading="eager"
             />
           </div>
 
@@ -48,15 +52,31 @@ const How = () => {
             <div className="flex flex-col justify-center items-center">
               <div className="relative my-[64px] lg:my-[106px] w-full flex justify-center">
                 <figure className="relative">
-                  <Image src={Vector2} alt="vector-2" className="absolute" />
-                  <Image src={Vector1} alt="vector-1" />
+                  <Image
+                    src={Vector2}
+                    alt="vector-2"
+                    width={384}
+                    height={42}
+                    className="absolute"
+                    loading="eager"
+                  />
+                  <Image
+                    src={Vector1}
+                    alt="vector-1"
+                    width={384}
+                    height={42}
+                    loading="eager"
+                  />
                 </figure>
 
                 <figure className="absolute inset-0 flex justify-center items-center">
                   <Image
                     src={Phsparkle}
                     alt="sparkle"
+                    width={180}
+                    height={180}
                     className="max-lg:size-[89px]"
+                    loading="eager"
                   />
                 </figure>
               </div>
@@ -88,19 +108,31 @@ const How = () => {
                 <Image
                   src={Failed}
                   alt="button-failed"
+                  width={173}
+                  height={43}
                   className="max-lg:w-[120px] max-2xl:w-[140px]"
+                  style={{ height: "auto" }}
+                  loading="eager"
                 />
                 <Image
                   src={Success}
                   alt="button-success"
+                  width={146}
+                  height={43}
                   className="max-lg:w-[117px] max-2xl:w-[130px]"
+                  style={{ height: "auto" }}
+                  loading="eager"
                 />
               </div>
 
               <Image
                 src={Skeleton}
                 alt="skeleton"
-                className="w-full px-4 h-auto"
+                width={Skeleton.width}
+                height={Skeleton.height}
+                className="h-auto w-full px-4"
+                style={{ height: "auto" }}
+                loading="eager"
               />
             </div>
           </div>

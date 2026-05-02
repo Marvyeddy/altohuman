@@ -24,12 +24,28 @@ const Cta = () => {
         </div>
 
         <div className="flex-1 max-lg:hidden">
-          <Image src={CtaImage} alt="cta_image" className="w-full h-auto" />
+          <Image
+            src={CtaImage}
+            alt="cta_image"
+            width={CtaImage.width}
+            height={CtaImage.height}
+            className="h-auto w-full"
+            style={{ height: "auto" }}
+            loading="eager"
+          />
         </div>
 
         {isMobile && (
           <div className="flex-1 mt-[38px]">
-            <Image src={CtaMobile} alt="cta-mobile" className="w-full h-auto" />
+            <Image
+              src={CtaMobile}
+              alt="cta-mobile"
+              width={CtaMobile.width}
+              height={CtaMobile.height}
+              className="h-auto w-full"
+              style={{ height: "auto" }}
+              loading="eager"
+            />
           </div>
         )}
       </div>

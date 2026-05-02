@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { gilroy } from "@/public/fonts/fonts";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -19,7 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased ${gilroy.className}`}>{children}</body>
+      <body className={`antialiased ${gilroy.className}`}>
+        <div>{children}</div>
+        <Toaster richColors position="top-center"/>
+      </body>
+      
     </html>
   );
 }

@@ -95,7 +95,8 @@ const HumanizerField = () => {
         </Card>
       </div>
 
-      {/* mobile */}
+      //? Mobile Result //
+      
       <h2 className="text-white font-semibold text-[18px] mt-[18px] mb-3 lg:hidden">
         Result
       </h2>

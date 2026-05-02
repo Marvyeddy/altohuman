@@ -11,7 +11,7 @@ const DeletePage = () => {
 
       <div className="flex-2">
         <Typography.P className="opacity-50">
-          Note that you won’t be able to retrieve this account once deleted.
+          Note that you won&apos;t be able to retrieve this account once deleted.
         </Typography.P>
         <Button className="rounded-full text-white bg-red-500 mt-4">
           Delete account

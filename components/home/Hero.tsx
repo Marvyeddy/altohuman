@@ -15,7 +15,14 @@ const Hero = () => {
             Make Your AI Content <br />
             Feel Human{" "}
             <span className="inline-block">
-              <Image src={Sparkle} alt="sparkle" className="max-lg:size-6" />
+              <Image
+                src={Sparkle}
+                alt="sparkle"
+                width={48}
+                height={48}
+                className="size-12 max-lg:size-6"
+                loading="eager"
+              />
             </span>
           </Typography.H1>
 
