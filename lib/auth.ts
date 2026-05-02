@@ -9,6 +9,24 @@ export const auth = betterAuth({
     database: new Pool({
         connectionString:process.env.DATABASE_URL
     }),
+    user:{
+        deleteUser: {
+            enabled: true,
+            sendDeleteAccountVerification: async ({ user, url }) => {
+                const html = getEmailTemplate("delete", {
+                    url: url
+                });
+    
+                await resend.emails.send({
+                    // MUST match your verified subdomain
+                    from: "Altohuman <onboarding@mail.altohuman.site>", 
+                    to: user.email,
+                    subject: "Delete account permanently - Altohuman",
+                    html: html,
+                });
+            },
+        }
+    },
     emailAndPassword: { 
         enabled: true,
         requireEmailVerification: true,

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Account Deletion Confirmation - Altohuman</title>
+    <style>
+      body {
+        background-color: #f7f7f7;
+        font-family: 'Segoe UI', 'Helvetica Neue', Arial, 'Liberation Sans', sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 480px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 4px 24px rgba(30,30,30,0.13);
+        padding: 40px 32px 32px 32px;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      .header img {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 12px;
+      }
+      .header h1 {
+        margin: 0 0 8px 0;
+        font-size: 24px;
+        color: #111112;
+        font-weight: bold;
+      }
+      .message {
+        color: #2D2F31;
+        font-size: 16px;
+        margin-bottom: 30px;
+        line-height: 1.6;
+        text-align: center;
+      }
+      .cta-btn {
+        display: inline-block;
+        background: #EF4444;
+        color: #fff !important;
+        text-decoration: none;
+        padding: 14px 38px;
+        border-radius: 32px;
+        font-weight: 700;
+        font-size: 16px;
+        letter-spacing: .02em;
+        margin: 0 auto;
+        transition: background 0.18s;
+        box-shadow: 0 2px 8px rgba(239,68,68,0.08);
+      }
+      .cta-btn:hover {
+        background: #b91c1c;
+      }
+      .footer {
+        margin-top: 36px;
+        font-size: 13px;
+        text-align: center;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <!-- Optionally insert your brand logo here -->
+        <img src="https://res.cloudinary.com/dtkaccmm9/image/upload/v1765814722/Logo_nam8rt.png" alt="Altohuman Logo" onerror="this.style.display='none'">
+        <h1>Confirm Account Deletion</h1>
+      </div>
+      <div class="message">
+        <p>
+          Hi<span style="color:#1e293b;">,</span>
+        </p>
+        <p>
+          You recently requested to <b>delete your Altohuman account.</b> This action is <u>permanent</u> and will remove all your data from our platform.
+        </p>
+        <p>
+          If you are sure you want to proceed, please confirm by clicking the button below.
+        </p>
+      </div>
+      <div style="text-align:center;">
+        <a
+          href="{{url}}"
+          class="cta-btn"
+        >Yes, Delete My Account</a>
+      </div>
+      <div class="message" style="font-size:14px; color:#7b818a; margin-top:24px;">
+        <p>
+          If you did not request this, you can safely ignore this email and your account will not be deleted.
+        </p>
+      </div>
+      <div class="footer">
+        &copy; Altohuman
+      </div>
+    </div>
+  </body>
+</html>
