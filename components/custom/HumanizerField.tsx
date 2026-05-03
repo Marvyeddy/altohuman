@@ -11,6 +11,7 @@ import Copy from "@/public/assets/Copy.svg";
 import Trash from "@/public/assets/Trash.svg";
 import Delete from "@/public/assets/delete.svg";
 import Copy_Dark from "@/public/assets/copy-dark.svg";
+import { toast } from "sonner";
 
 const HumanizerField = () => {
   const [NoButton, setNoButton] = useState(false);
@@ -65,7 +66,7 @@ const HumanizerField = () => {
     if (!file) return;
 
     if (file.type !== "text/plain" && !file.name.endsWith(".txt")) {
-      alert("Please upload a .txt file.");
+      toast.warning("Please upload a .txt file.");
       return;
     }
 
@@ -101,7 +102,7 @@ const HumanizerField = () => {
               onChange={handleInputChange}
               className={cn(
                 `w-full focus:outline-none resize-none placeholder:text-black/80 p-5`,
-                input && `flex-1 mb-[15px]`,
+                input && `flex-1 mb-[15px] mt-[10px]`,
                 wordCount >= WORD_LIMIT && "caret-red-500", // Visual cue when locked
               )}
               onFocus={() => setNoButton(true)}
@@ -137,11 +138,17 @@ const HumanizerField = () => {
               <Separator className="bg-[#939393] lg:hidden opacity-40 my-5" />
 
               <div className="flex gap-5">
-                <Button className="bg-[#899BAC29] rounded-full font-extrabold">
+                <Button
+                  className="bg-[#899BAC29] rounded-full font-extrabold"
+                  disabled={!input}
+                >
                   Check Ai Score
                 </Button>
 
-                <Button className="text-white font-extrabold bg-black rounded-full">
+                <Button
+                  className="text-white font-extrabold bg-black rounded-full"
+                  disabled={!input}
+                >
                   Humanize
                 </Button>
               </div>

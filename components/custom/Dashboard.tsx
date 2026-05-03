@@ -55,9 +55,13 @@ const Dashboard = () => {
 
         <div className="flex max-lg:flex-col lg:justify-between lg:items-center gap-4 mb-[76px]">
           <div>
-            <Typography.H1 color="white">
+            <Typography.H1 color="white" className="flex items-center">
               Hey {session?.user.name.split(" ")[0]}
-              <Image src={Star} alt="star" className="inline-block ml-6" />
+              <Image
+                src={Star}
+                alt="star"
+                className="inline-block ml-3 max-md:size-8"
+              />
             </Typography.H1>
             <Typography.P color="white" className="max-w-[644px] mt-5">
               Say goodbye to robotic text and hello to genuine communication.
