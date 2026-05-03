@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import Typography from "../ui/Typography";
 import { Button } from "../ui/button";
-import { CircleXIcon, EyeClosedIcon, EyeIcon } from "lucide-react";
+import { CircleXIcon, EyeClosedIcon, EyeIcon, LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,7 @@ import { toast } from "sonner";
 const Login = () => {
   const [visible, setVisible] = useState(false);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onVisible = () => {
     setVisible((prev) => !prev);
@@ -57,10 +58,12 @@ const Login = () => {
   }
 
   const handleGoogleSignUp = async () => {
+    setIsLoading(true);
     await authClient.signIn.social({
       provider: "google",
       callbackURL: "/dashboard",
     });
+    setIsLoading(false);
   };
 
   return (
@@ -160,8 +163,14 @@ const Login = () => {
               type="button"
               onClick={handleGoogleSignUp}
             >
-              <Image src={Google} alt="google-svg" className="mr-4" />
-              Continue with Google
+              {isLoading ? (
+                <LoaderIcon className="animate-spin" />
+              ) : (
+                <>
+                  <Image src={Google} alt="google-svg" className="mr-4" />
+                  Continue with Google
+                </>
+              )}
             </Button>
 
             <Typography.P className="text-center">

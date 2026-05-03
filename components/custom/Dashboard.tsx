@@ -9,6 +9,7 @@ import HumanizerField from "./HumanizerField";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { LogOutIcon } from "lucide-react";
 
 const Dashboard = () => {
   const { useSession } = authClient;
@@ -31,13 +32,20 @@ const Dashboard = () => {
         <nav className="flex items-center justify-between mb-[85px]">
           <Image src={Logo} alt="logo-image" />
 
-          <div className="space-x-3">
+          <div className="space-x-3 flex items-center">
             <Button
               variant={"link"}
-              className="text-white"
+              className="text-white hover:text-red-400 max-md:hidden"
               onClick={handleSignOut}
             >
               Log out
+            </Button>
+            <Button
+              className="bg-white rounded-full md:hidden"
+              size={"icon"}
+              title="Exit"
+            >
+              <LogOutIcon className="text-red-400" />
             </Button>
             <Button className="font-extrabold bg-white rounded-full" asChild>
               <Link href={"/account"}>My Account</Link>
