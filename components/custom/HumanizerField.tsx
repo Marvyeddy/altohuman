@@ -17,6 +17,7 @@ const HumanizerField = () => {
   const [NoButton, setNoButton] = useState(false);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const WORD_LIMIT = 300;
 
@@ -82,6 +83,31 @@ const HumanizerField = () => {
     e.target.value = "";
   };
 
+  const handleAiAction = async (action: "humanize" | "score") => {
+    if (!input.trim()) return;
+    setIsProcessing(true);
+
+    try {
+      // Change this to your FastAPI URL
+      const response = await fetch("http://localhost:8000/humanize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ text: input, action }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || "Something went wrong.");
+      setOutput(data.text ?? "");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Error");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <>
       {/* Hidden File Input */}
@@ -139,17 +165,21 @@ const HumanizerField = () => {
 
               <div className="flex gap-5">
                 <Button
+                  type="button"
                   className="bg-[#899BAC29] rounded-full font-extrabold"
-                  disabled={!input}
+                  disabled={!input || isProcessing}
+                  onClick={() => handleAiAction("score")}
                 >
-                  Check Ai Score
+                  {isProcessing ? "Checking..." : "Check Ai Score"}
                 </Button>
 
                 <Button
+                  type="button"
                   className="text-white font-extrabold bg-black rounded-full"
-                  disabled={!input}
+                  disabled={!input || isProcessing}
+                  onClick={() => handleAiAction("humanize")}
                 >
-                  Humanize
+                  {isProcessing ? "Humanizing..." : "Humanize"}
                 </Button>
               </div>
             </div>

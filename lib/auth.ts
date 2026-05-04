@@ -9,6 +9,15 @@ export const auth = betterAuth({
     database: new Pool({
         connectionString:process.env.DATABASE_URL
     }),
+    advanced:{
+        database:{
+            generateId: "uuid"
+        },
+        defaultCookieAttributes:{
+            sameSite:  "none",
+            secure: true
+        }
+    },
     user:{
         deleteUser: {
             enabled: true,
