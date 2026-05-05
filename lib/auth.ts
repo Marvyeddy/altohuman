@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import {Pool} from 'pg'
 import { getEmailTemplate } from "./email-helper";
 import { Resend } from "resend";
+import { fa } from "zod/v4/locales";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -9,13 +10,13 @@ export const auth = betterAuth({
     database: new Pool({
         connectionString:process.env.DATABASE_URL
     }),
+    logger: {
+        level: "debug", // This will print the specific DB error in your terminal
+    },
     advanced:{
-        database:{
-            generateId: "uuid"
-        },
         defaultCookieAttributes:{
-            sameSite:  "none",
-            secure: true
+            sameSite: "lax",
+            secure: false
         }
     },
     user:{
@@ -34,6 +35,18 @@ export const auth = betterAuth({
                     html: html,
                 });
             },
+        }, 
+        additionalFields:{
+            credit:{
+                type: "number",
+                defaultValue: 50,
+                input: false
+            }, 
+            wordLimit: {
+                type: "number",
+                defaultValue: 300, 
+                input: false,
+            }
         }
     },
     emailAndPassword: { 
