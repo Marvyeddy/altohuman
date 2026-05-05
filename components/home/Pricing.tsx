@@ -5,6 +5,7 @@ import Thunder from "@/public/assets/thunder.svg";
 import Check from "@/public/assets/check.svg";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 const Pricing = () => {
   const price = [
@@ -70,7 +71,6 @@ const Pricing = () => {
                     loading="eager"
                   />
                   <Typography.H4>{item.name}</Typography.H4>
-            
                 </div>
 
                 <Typography.H3>₦{item.amount}</Typography.H3>
@@ -79,8 +79,9 @@ const Pricing = () => {
                   className={`border border-black rounded-full font-extrabold w-full ${
                     idx === 1 ? "bg-black text-white" : ""
                   }`}
+                  asChild
                 >
-                  {item.btn}
+                  <Link href={"/pricing"}>{item.btn}</Link>
                 </Button>
               </div>
 

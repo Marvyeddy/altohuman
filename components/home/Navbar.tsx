@@ -15,8 +15,11 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
-const Navbar = () => {
-  const { useSession, signOut } = authClient;
+const Navbar = ({ Session }: { Session: any }) => {
+  const { signOut } = authClient;
+
+  // Use server data if client data hasn't loaded yet
+  const session = Session;
   const router = useRouter();
 
   const Navlinks = [
@@ -37,8 +40,6 @@ const Navbar = () => {
       link: "#faqs",
     },
   ];
-
-  const { data: session } = useSession();
 
   const signout = async () => {
     await authClient.signOut({

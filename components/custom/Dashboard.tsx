@@ -8,13 +8,14 @@ import Star from "@/public/assets/hero-sparkle.svg";
 import HumanizerField from "./HumanizerField";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { LogOutIcon } from "lucide-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
-const Dashboard = () => {
-  const { useSession } = authClient;
-  const { data: session } = useSession();
+const Dashboard = ({ Session }: { Session: any }) => {
   const router = useRouter();
+  const session = Session;
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -26,6 +27,19 @@ const Dashboard = () => {
       },
     });
   };
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Check if the URL has ?status=success
+    if (searchParams.get("status") === "success") {
+      toast.success("Payment Successful! Your credits are being updated.");
+
+      // Clean the URL so the toast doesn't show again on refresh
+      router.replace("/dashboard");
+    }
+  }, [searchParams, router]);
+
   return (
     <section className="min-h-screen bg-black w-full">
       <div className="max-w-[1120px] mx-auto px-6 py-6">

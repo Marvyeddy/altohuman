@@ -1,8 +1,12 @@
 import Payment from "@/components/custom/Payment";
-import React from "react";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
-const PricingPage = () => {
-  return <Payment />;
+const PricingPage = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  return <Payment Session={session} />;
 };
 
 export default PricingPage;

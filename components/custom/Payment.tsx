@@ -13,9 +13,49 @@ import Check from "@/public/assets/check.svg";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
-const Payment = () => {
-  const { data: session } = authClient.useSession();
+const Payment = ({ Session }: { Session: any }) => {
+  const session = Session;
+  const [isLoading, setIsLoading] = useState<string | null>(null);
+
+  const handlePurchase = async (planName: string) => {
+    if (!session) {
+      toast.error("Please login to purchase credits");
+      return;
+    }
+
+    setIsLoading(planName);
+    try {
+      // Fixed the URL to include your full ngrok path
+      const response = await fetch(
+        `https://humped-footwork-dividing.ngrok-free.dev/api/v1/payment/initialize/${planName.toLowerCase()}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.session.token}`,
+          },
+        },
+      );
+
+      const data = await response.json();
+
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
+      } else {
+        toast.error(data.detail || "Failed to initialize payment");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Connection error. Is the backend running?");
+    } finally {
+      setIsLoading(null);
+    }
+  };
+
   const price = [
     {
       name: "Starter",
@@ -52,17 +92,8 @@ const Payment = () => {
     },
   ];
 
-  const currentPlan = {
-    name: "Pro",
-    img: Crown,
-    amount: 500,
-    list: [
-      "Advanced AI detection",
-      "Full Humanization",
-      "1200 words per request",
-      "500 credits",
-    ],
-  };
+  // In production, you'd get this from session.user.wordLimit or similar
+  const currentPlanName = "Pro";
 
   return (
     <section className="min-h-screen w-full">
@@ -71,7 +102,6 @@ const Payment = () => {
           <figure className="flex-1">
             <Image src={Logo} alt="logo" />
           </figure>
-
           <ul className="text-center">
             <li>
               <Link
@@ -82,11 +112,9 @@ const Payment = () => {
               </Link>
             </li>
           </ul>
-
-          <div className="flex-1 ">
+          <div className="flex-1">
             <div className="flex items-center gap-4 py-[9px] px-3 border border-[#00000036] rounded-full w-fit ml-auto">
               <Image src={Avatar} alt="avatar" />
-
               <div className="max-md:hidden">
                 <Typography.P className="font-medium">
                   {session?.user.name}
@@ -101,26 +129,25 @@ const Payment = () => {
 
         <div className="max-w-[550px] mx-auto shadow-md shadow-[#0000001A] border border-[#0000001A] rounded-[18px] p-6 mb-6">
           <Image src={Price} alt="pricing-img" className="mx-auto" />
-
           <h2 className="font-bold lg:text-[32px] text-[24px] text-center mt-6 mb-8">
             Pricing
           </h2>
 
           <div className="bg-blue-600 py-[13px] px-4 rounded-lg text-center mb-4">
             <Typography.P size="sm" className="font-medium text-white">
-              You currently have <span className="font-extrabold">200</span>{" "}
-              credits. See the pricing plan to get more credits
+              You currently have <span className="font-extrabold">22</span>{" "}
+              credits.
             </Typography.P>
           </div>
 
           <ul className="space-y-4">
             {price.map((item, idx) => {
-              const myPlan = currentPlan.name == item.name;
+              const isCurrentPlan = currentPlanName === item.name;
               return (
                 <div
                   className={cn(
                     "flex max-md:flex-col p-4 rounded-lg gap-7 border border-[#00000026]",
-                    myPlan && "bg-[#F7F7F7] border-[#F7F7F7]",
+                    isCurrentPlan && "bg-[#F7F7F7] border-[#F7F7F7]",
                   )}
                   key={idx}
                 >
@@ -136,30 +163,30 @@ const Payment = () => {
                       <Typography.P className="font-semibold">
                         {item.name}
                       </Typography.P>
-
-                      {myPlan && (
+                      {isCurrentPlan && (
                         <div className="border border-[#00000038] rounded-full py-0.5 px-1.5 w-fit text-[#2B2B2B]">
                           <h2 className="text-xs">Current plan</h2>
                         </div>
                       )}
                     </div>
-
-                    <div>
-                      <Typography.H3>₦{item.amount}</Typography.H3>
-                    </div>
+                    <Typography.H3>₦{item.amount}</Typography.H3>
 
                     <Button
                       className={cn(
-                        `text-white bg-black rounded-full`,
-                        myPlan && "bg-red-500 text-white",
+                        "text-white rounded-full min-w-[120px] bg-black hover:bg-gray-800",
+                        isCurrentPlan && "bg-red-400 text-white",
                       )}
-                      size={"sm"}
+                      size="sm"
+                      onClick={() => handlePurchase(item.name)}
                     >
-                      {myPlan ? "Cancel" : "Buy now"}
+                      {isLoading === item.name ? (
+                        <Loader2 className="animate-spin size-4" />
+                      ) : (
+                        "Buy now"
+                      )}
                     </Button>
                   </div>
 
-                  {/* second */}
                   <div className="flex-1">
                     <ul className="space-y-2">
                       {item.list.map((i, idx2) => (

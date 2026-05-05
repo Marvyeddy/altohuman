@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import {Pool} from 'pg'
 import { getEmailTemplate } from "./email-helper";
 import { Resend } from "resend";
-import { fa } from "zod/v4/locales";
+import { customSession } from "better-auth/plugins";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -45,6 +45,11 @@ export const auth = betterAuth({
             wordLimit: {
                 type: "number",
                 defaultValue: 300, 
+                input: false,
+            },
+            currentPlan: {
+                type: "string",
+                defaultValue: "Free", // New users start on the Free tier
                 input: false,
             }
         }

@@ -3,12 +3,18 @@ import Typography from "../ui/Typography";
 import Navbar from "./Navbar";
 import Sparkle from "@/public/assets/hero-sparkle.svg";
 import HumanizerField from "../custom/HumanizerField";
+import { auth } from "@/lib/auth"; // Your server-side auth instance
+import { headers } from "next/headers";
 
-const Hero = () => {
+const Hero = async () => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
   return (
     <section className="bg-black min-h-screen">
       <div className="max-w-[1200px] px-6 mx-auto lg:pt-[62px] pt-[30px] lg:pb-[103px] pb-[42px]">
-        <Navbar />
+        <Navbar Session={session} />
 
         <div className="max-w-[823px] mx-auto text-white text-center lg:mb-16 mb-8">
           <Typography.H1 color="white">
