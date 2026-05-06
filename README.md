@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Altohuman
+
+Altohuman is a Next.js app for checking AI-generated text and rewriting it into more natural human-sounding copy. It includes a marketing site, authentication, account management, pricing, payments, and a dashboard humanizer tool that talks to a backend API.
+
+## Features
+
+- AI score checking and text humanization from the dashboard
+- Streaming humanized text responses
+- Word limits and credit display by plan
+- Email/password auth with Better Auth
+- Google sign-in
+- Email verification, password reset, and account deletion emails through Resend
+- Pricing flow that initializes payments through the backend API
+- Account pages for personal info, security, current plan, and deletion
+
+## Tech Stack
+
+- Next.js 16 App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Better Auth
+- PostgreSQL
+- Resend
+- Radix UI and local UI components
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env` file in the project root:
+
+```env
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=http://localhost:3000
+DATABASE_URL=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+RESEND_API_KEY=
+BACKEND_API_URL=
+```
+
+`BACKEND_API_URL` is optional for local startup because the app has a fallback URL in `lib/backend-api.ts`, but setting it explicitly is recommended.
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev      # Start the local Next.js dev server
+npm run build    # Build the production app
+npm run start    # Start the production server
+npm run lint     # Run ESLint
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+app/                    Next.js routes and API route handlers
+actions/                Server actions for auth, payments, and humanizer calls
+components/custom/      Product screens and dashboard components
+components/home/        Marketing page sections
+components/ui/          Shared UI primitives
+emails/                 HTML email templates
+lib/                    Auth, backend API, email, and utility helpers
+public/                 Fonts, images, and SVG assets
+schema/                 Form validation schemas
+better-auth_migrations/ Better Auth database migrations
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Main Routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/` - marketing homepage
+- `/login` - sign in
+- `/register` - create account
+- `/forget-password` - request a password reset
+- `/reset-password` - set a new password
+- `/dashboard` - AI score checker and humanizer
+- `/pricing` - paid plan selection
+- `/account` - account area
 
-## Deploy on Vercel
+## Backend Integration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The app forwards authenticated requests to a backend API:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `POST /api/v1/humanize`
+- `GET /api/v1/user/me`
+- `POST /api/v1/payment/initialize/:plan`
+
+The frontend sends the Better Auth session cookies to the backend so user credits, plan limits, scoring, humanization, and payment initialization can stay tied to the active session.
