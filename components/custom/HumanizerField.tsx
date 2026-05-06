@@ -14,6 +14,7 @@ import Copy_Dark from "@/public/assets/copy-dark.svg";
 import { toast } from "sonner";
 import { processAiAction } from "@/actions/humanize";
 import { LoaderIcon } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
   const [NoButton, setNoButton] = useState(false);
@@ -227,27 +228,45 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
 
           {/* Field 2 (Desktop Result Area) */}
           <div className="flex-1 p-5 flex flex-col justify-between max-lg:hidden">
-            <textarea
-              readOnly
-              value={output}
-              className={cn(
-                "w-full focus:outline-none resize-none placeholder:text-black/80 mb-[30px] flex-1 transition-colors duration-300",
-                activeAction === "humanize"
-                  ? "text-green-600 font-medium"
-                  : "text-black",
-              )}
-              placeholder="Results will appear here..."
-            />
+            {isProcessing === "score" || isProcessing === "humanize" ? (
+              <div className="flex-1 mb-[30px] space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-[90%]" />
+                <Skeleton className="h-4 w-[95%]" />
+                <Skeleton className="h-4 w-[40%]" />
+              </div>
+            ) : (
+              <textarea
+                readOnly
+                value={output}
+                className={cn(
+                  "w-full focus:outline-none resize-none placeholder:text-black/80 mb-[30px] flex-1 transition-colors duration-300",
+                  activeAction === "humanize"
+                    ? "text-green-600 font-medium"
+                    : "text-black",
+                )}
+                placeholder="Results will appear here..."
+              />
+            )}
 
             <div className="flex items-center justify-between ">
-              <h1
-                className={cn("font-semibold", {
-                  "text-green-500": activeAction === "humanize",
-                  "text-red-600": activeAction === "score",
-                })}
-              >
-                {status}
-              </h1>
+              <div className="flex items-center justify-between ">
+                {isProcessing ? (
+                  <Skeleton className="h-5 w-32" />
+                ) : (
+                  <h1
+                    className={cn(
+                      "font-semibold",
+                      activeAction === "humanize"
+                        ? "text-green-500"
+                        : "text-red-600",
+                    )}
+                  >
+                    {status}
+                  </h1>
+                )}
+                {/* Buttons... */}
+              </div>
 
               <div className="flex items-center gap-4">
                 <Button
@@ -287,17 +306,26 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
       <div className="bg-[#FFFFFF1A] p-3 rounded-[37px] lg:hidden">
         <Card className="rounded-3xl h-[427px] flex flex-row py-0">
           <div className="flex-1 flex flex-col justify-between">
-            <textarea
-              readOnly
-              value={output}
-              className={cn(
-                "w-full focus:outline-none resize-none placeholder:text-black/80 mb-[30px] flex-1 transition-colors duration-300",
-                activeAction === "humanize"
-                  ? "text-green-600 font-medium"
-                  : "text-black",
-              )}
-              placeholder="Results will appear here..."
-            />
+            {isProcessing === "score" || isProcessing === "humanize" ? (
+              <div className="flex-1 mb-[30px] space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-[90%]" />
+                <Skeleton className="h-4 w-[95%]" />
+                <Skeleton className="h-4 w-[40%]" />
+              </div>
+            ) : (
+              <textarea
+                readOnly
+                value={output}
+                className={cn(
+                  "w-full focus:outline-none resize-none placeholder:text-black/80 mb-[30px] flex-1 transition-colors duration-300",
+                  activeAction === "humanize"
+                    ? "text-green-600 font-medium"
+                    : "text-black",
+                )}
+                placeholder="Results will appear here..."
+              />
+            )}
 
             <div>
               <Separator className="bg-[#939393] lg:hidden opacity-40 my-5" />
