@@ -96,7 +96,7 @@ const PersonalInfoPage = ({ Session }: { Session: any }) => {
                 id="email"
                 type="email"
                 placeholder="name@email.com"
-                className="rounded-full border-[#00000030]"
+                className="rounded-full border-[#00000030] cursor-not-allowed"
                 disabled
               />
               {errors.email && (

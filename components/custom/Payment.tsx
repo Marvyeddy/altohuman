@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { initializePaymentAction } from "@/actions/payment";
 
 const Payment = ({ Session, userData }: { Session: any; userData: any }) => {
   const session = Session;
@@ -27,33 +28,17 @@ const Payment = ({ Session, userData }: { Session: any; userData: any }) => {
     }
 
     setIsLoading(planName);
-    try {
-      const response = await fetch(
-        `https://humped-footwork-dividing.ngrok-free.dev/api/v1/payment/initialize/${planName.toLowerCase()}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.session.token}`,
-          },
-        },
-      );
 
-      const data = await response.json();
+    // 2. Call the server action instead of window.fetch
+    const data = await initializePaymentAction(planName);
 
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url;
-      } else {
-        toast.error(data.detail || "Failed to initialize payment");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Connection error. Is the backend running?");
-    } finally {
+    if (data.checkout_url) {
+      window.location.href = data.checkout_url;
+    } else {
+      toast.error(data.error || data.detail || "Failed to initialize payment");
       setIsLoading(null);
     }
   };
-
   const price = [
     {
       name: "Starter",
@@ -90,7 +75,7 @@ const Payment = ({ Session, userData }: { Session: any; userData: any }) => {
     },
   ];
 
-  const currentPlanName = userData?.currentPlan ?? "Free";
+  const currentPlanName = userData?.currentPlan ?? "";
 
   return (
     <section className="min-h-screen w-full">
@@ -132,14 +117,15 @@ const Payment = ({ Session, userData }: { Session: any; userData: any }) => {
 
           <div className="bg-blue-600 py-[13px] px-4 rounded-lg text-center mb-4">
             <Typography.P size="sm" className="font-medium text-white">
-              You currently have <span className="font-extrabold">22</span>{" "}
+              You currently have{" "}
+              <span className="font-extrabold">{userData?.credit ?? 0}</span>{" "}
               credits.
             </Typography.P>
           </div>
 
           <ul className="space-y-4">
             {price.map((item, idx) => {
-              const isCurrentPlan = currentPlanName === item.name;
+              const isCurrentPlan = currentPlanName == item.name.toLowerCase();
               return (
                 <div
                   className={cn(
