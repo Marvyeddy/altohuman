@@ -14,7 +14,7 @@ import Copy_Dark from "@/public/assets/copy-dark.svg";
 import { toast } from "sonner";
 import { processAiAction } from "@/actions/humanize";
 
-const HumanizerField = () => {
+const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
   const [NoButton, setNoButton] = useState(false);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -24,7 +24,7 @@ const HumanizerField = () => {
     null,
   );
 
-  const WORD_LIMIT = 300;
+  const WORD_LIMIT = wordLimit;
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
