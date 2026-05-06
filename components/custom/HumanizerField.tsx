@@ -13,18 +13,21 @@ import Delete from "@/public/assets/delete.svg";
 import Copy_Dark from "@/public/assets/copy-dark.svg";
 import { toast } from "sonner";
 import { processAiAction } from "@/actions/humanize";
+import { LoaderIcon } from "lucide-react";
 
 const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
   const [NoButton, setNoButton] = useState(false);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [status, setStatus] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState<"humanize" | "score" | null>(
+    null,
+  );
   const [activeAction, setActiveAction] = useState<"humanize" | "score" | null>(
     null,
   );
 
-  const WORD_LIMIT = wordLimit;
+  const WORD_LIMIT = wordLimit ?? 300;
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -83,7 +86,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
 
   const handleAiAction = async (action: "humanize" | "score") => {
     if (!input.trim()) return;
-    setIsProcessing(true);
+    setIsProcessing(action);
     setActiveAction(action);
 
     if (action === "score") {
@@ -91,52 +94,45 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
       if (result.success) {
         setOutput(result.text);
         setStatus(result.message);
-      } else if (result.error === "Insufficient credits") {
-        toast.error("Out of credits! Please top up.");
+      } else {
+        toast.error(result.error || "Checking failed");
       }
     } else {
       setOutput("");
       try {
-        const response = await fetch(
-          "https://humped-footwork-dividing.ngrok-free.dev/api/v1/humanize",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ text: input, action: "humanize" }),
-          },
-        );
+        const response = await fetch("/api/humanize", {
+          // Calls your Next.js route
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: input, action: "humanize" }),
+        });
 
-        // 1. Handle Credit Error
         if (response.status === 402) {
-          toast.error("Insufficient credits to humanize this text.");
-          setIsProcessing(false);
+          toast.error("Insufficient credits!");
+          setIsProcessing(null);
           return;
         }
 
-        if (!response.ok) throw new Error("Server error");
+        if (!response.ok) throw new Error();
 
-        if (!response.body) return;
+        const reader = response.body?.getReader();
+        if (!reader) return;
 
-        const reader = response.body.getReader();
         const decoder = new TextDecoder();
-
         while (true) {
           const { value, done } = await reader.read();
-          if (done) {
-            setOutput((prev) => prev.trim().replace(/\*+/g, ""));
-            break;
-          }
+          if (done) break;
+
           const chunk = decoder.decode(value);
-          const cleanChunk = chunk.replace(/\*+/g, "");
-          setOutput((prev) => prev + cleanChunk);
+          // Clean and append
+          setOutput((prev) => prev + chunk.replace(/\*/g, ""));
           setStatus("Humanized 99%");
         }
       } catch (error) {
-        toast.error("An error occurred. Please try again.");
+        toast.error("Streaming failed. Check backend connection.");
       }
     }
-    setIsProcessing(false);
+    setIsProcessing(null);
   };
 
   return (
@@ -159,7 +155,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
               onChange={handleInputChange}
               className={cn(
                 `w-full focus:outline-none resize-none placeholder:text-black/80 p-5`,
-                input && `flex-1 mb-[15px] mt-[10px]`,
+                input && `flex-1 mb-[15px]`,
                 wordCount >= WORD_LIMIT && "caret-red-500",
               )}
               onFocus={() => setNoButton(true)}
@@ -198,19 +194,27 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
                 <Button
                   type="button"
                   className="bg-[#899BAC29] rounded-full font-extrabold"
-                  disabled={!input || isProcessing}
+                  disabled={!input || isProcessing !== null}
                   onClick={() => handleAiAction("score")}
                 >
-                  {isProcessing ? "Checking..." : "Check Ai Score"}
+                  {isProcessing === "score" ? (
+                    <LoaderIcon className="animate-spin" />
+                  ) : (
+                    "Check Ai Score"
+                  )}
                 </Button>
 
                 <Button
                   type="button"
                   className="text-white font-extrabold bg-black rounded-full"
-                  disabled={!input || isProcessing}
+                  disabled={!input || isProcessing !== null}
                   onClick={() => handleAiAction("humanize")}
                 >
-                  {isProcessing ? "Humanizing..." : "Humanize"}
+                  {isProcessing === "humanize" ? (
+                    <LoaderIcon className="animate-spin" />
+                  ) : (
+                    "Humanize"
+                  )}
                 </Button>
               </div>
             </div>
@@ -236,14 +240,24 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
             />
 
             <div className="flex items-center justify-between ">
-              <h1 className="font-semibold">{status}</h1>
+              <h1
+                className={cn("font-semibold", {
+                  "text-green-500": activeAction === "humanize",
+                  "text-red-600": activeAction === "score",
+                })}
+              >
+                {status}
+              </h1>
 
               <div className="flex items-center gap-4">
                 <Button
                   size={"icon"}
                   className="shadow-sm shadow-[#0000004D]"
                   title="copy"
-                  onClick={() => navigator.clipboard.writeText(output)}
+                  onClick={() => {
+                    navigator.clipboard.writeText(output);
+                    toast.success("Text copied to clipboard!");
+                  }}
                 >
                   <Image src={Copy} alt="copy" />
                 </Button>
@@ -254,6 +268,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
                   title="delete"
                   onClick={() => {
                     setOutput("");
+                    setStatus("");
                     setActiveAction(null);
                   }}
                 >
@@ -302,7 +317,10 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
                 </Button>
 
                 <Button
-                  onClick={() => navigator.clipboard.writeText(output)}
+                  onClick={() => {
+                    navigator.clipboard.writeText(output);
+                    toast.success("Text copied to clipboard!");
+                  }}
                   className="shadow-sm shadow-[#0000004D] font-extrabold rounded-full"
                 >
                   Copy
