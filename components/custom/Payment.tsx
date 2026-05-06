@@ -12,12 +12,11 @@ import Thunder from "@/public/assets/thunder.svg";
 import Check from "@/public/assets/check.svg";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-const Payment = ({ Session }: { Session: any }) => {
+const Payment = ({ Session, userData }: { Session: any; userData: any }) => {
   const session = Session;
   const [isLoading, setIsLoading] = useState<string | null>(null);
 
@@ -29,7 +28,6 @@ const Payment = ({ Session }: { Session: any }) => {
 
     setIsLoading(planName);
     try {
-      // Fixed the URL to include your full ngrok path
       const response = await fetch(
         `https://humped-footwork-dividing.ngrok-free.dev/api/v1/payment/initialize/${planName.toLowerCase()}`,
         {
@@ -92,8 +90,7 @@ const Payment = ({ Session }: { Session: any }) => {
     },
   ];
 
-  // In production, you'd get this from session.user.wordLimit or similar
-  const currentPlanName = "Pro";
+  const currentPlanName = userData?.currentPlan ?? "Free";
 
   return (
     <section className="min-h-screen w-full">

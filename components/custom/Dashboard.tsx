@@ -7,26 +7,15 @@ import Typography from "../ui/Typography";
 import Star from "@/public/assets/hero-sparkle.svg";
 import HumanizerField from "./HumanizerField";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LogOutIcon } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { logoutAction } from "@/actions/auth";
 
-const Dashboard = ({ Session }: { Session: any }) => {
+const Dashboard = ({ Session, userData }: { Session: any; userData: any }) => {
   const router = useRouter();
   const session = Session;
-
-  const handleSignOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/");
-          router.refresh();
-        },
-      },
-    });
-  };
 
   const searchParams = useSearchParams();
 
@@ -44,13 +33,15 @@ const Dashboard = ({ Session }: { Session: any }) => {
     <section className="min-h-screen bg-black w-full">
       <div className="max-w-[1120px] mx-auto px-6 py-6">
         <nav className="flex items-center justify-between mb-[85px]">
-          <Image src={Logo} alt="logo-image" />
+          <a href="/">
+            <Image src={Logo} alt="logo-image" />
+          </a>
 
           <div className="space-x-3 flex items-center">
             <Button
               variant={"link"}
               className="text-white hover:text-red-400 max-md:hidden"
-              onClick={handleSignOut}
+              onClick={() => logoutAction()}
             >
               Log out
             </Button>
@@ -86,7 +77,7 @@ const Dashboard = ({ Session }: { Session: any }) => {
 
           <div className="flex items-center gap-3 bg-[#FFFFFF1A] py-2 px-3 rounded-full max-lg:w-fit">
             <Typography.P color="white" className="font-semibold">
-              200 credits
+              {userData?.credit ?? 0} credits
             </Typography.P>
             <Button
               className="bg-white rounded-full py-1 px-2 text-xs font-extrabold "
