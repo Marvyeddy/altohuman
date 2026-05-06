@@ -12,19 +12,29 @@ import { LogOutIcon } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { logoutAction } from "@/actions/auth";
+import type { BackendUserData } from "@/lib/backend-api";
 
-const Dashboard = ({ Session, userData }: { Session: any; userData: any }) => {
+type DashboardSession = {
+  user: {
+    name: string;
+  };
+} | null;
+
+const Dashboard = ({
+  Session,
+  userData,
+}: {
+  Session: DashboardSession;
+  userData: BackendUserData;
+}) => {
   const router = useRouter();
   const session = Session;
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Check if the URL has ?status=success
     if (searchParams.get("status") === "success") {
       toast.success("Payment Successful! Your credits are being updated.");
-
-      // Clean the URL so the toast doesn't show again on refresh
       router.replace("/dashboard");
     }
   }, [searchParams, router]);
@@ -33,9 +43,9 @@ const Dashboard = ({ Session, userData }: { Session: any; userData: any }) => {
     <section className="min-h-screen bg-black w-full">
       <div className="max-w-[1120px] mx-auto px-6 py-6">
         <nav className="flex items-center justify-between mb-[85px]">
-          <a href="/">
+          <Link href="/">
             <Image src={Logo} alt="logo-image" />
-          </a>
+          </Link>
 
           <div className="space-x-3 flex items-center">
             <Button
@@ -88,7 +98,7 @@ const Dashboard = ({ Session, userData }: { Session: any; userData: any }) => {
           </div>
         </div>
 
-        <HumanizerField wordLimit={userData.wordLimit} />
+        <HumanizerField wordLimit={userData?.wordLimit} />
       </div>
     </section>
   );

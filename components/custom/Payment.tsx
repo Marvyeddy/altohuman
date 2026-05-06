@@ -16,8 +16,22 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { initializePaymentAction } from "@/actions/payment";
+import type { BackendUserData } from "@/lib/backend-api";
 
-const Payment = ({ Session, userData }: { Session: any; userData: any }) => {
+type PaymentSession = {
+  user: {
+    name: string;
+    email: string;
+  };
+} | null;
+
+const Payment = ({
+  Session,
+  userData,
+}: {
+  Session: PaymentSession;
+  userData: BackendUserData;
+}) => {
   const session = Session;
   const [isLoading, setIsLoading] = useState<string | null>(null);
 
@@ -29,11 +43,10 @@ const Payment = ({ Session, userData }: { Session: any; userData: any }) => {
 
     setIsLoading(planName);
 
-    // 2. Call the server action instead of window.fetch
     const data = await initializePaymentAction(planName);
 
     if (data.checkout_url) {
-      window.location.href = data.checkout_url;
+      window.location.assign(data.checkout_url);
     } else {
       toast.error(data.error || data.detail || "Failed to initialize payment");
       setIsLoading(null);
@@ -125,7 +138,7 @@ const Payment = ({ Session, userData }: { Session: any; userData: any }) => {
 
           <ul className="space-y-4">
             {price.map((item, idx) => {
-              const isCurrentPlan = currentPlanName == item.name.toLowerCase();
+              const isCurrentPlan = currentPlanName === item.name.toLowerCase();
               return (
                 <div
                   className={cn(

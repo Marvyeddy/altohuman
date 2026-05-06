@@ -16,7 +16,7 @@ import { processAiAction } from "@/actions/humanize";
 import { LoaderIcon } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 
-const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
+const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
   const [NoButton, setNoButton] = useState(false);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -28,7 +28,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
     null,
   );
 
-  const WORD_LIMIT = wordLimit ?? 300;
+  const WORD_LIMIT = wordLimit || 300;
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -90,19 +90,18 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
     setIsProcessing(action);
     setActiveAction(action);
 
-    if (action === "score") {
-      const result = await processAiAction(input, "score");
-      if (result.success) {
-        setOutput(result.text);
-        setStatus(result.message);
+    try {
+      if (action === "score") {
+        const result = await processAiAction(input, "score");
+        if (result.success) {
+          setOutput(result.text);
+          setStatus(result.message);
+        } else {
+          toast.error(result.error || "Checking failed");
+        }
       } else {
-        toast.error(result.error || "Checking failed");
-      }
-    } else {
-      setOutput("");
-      try {
+        setOutput("");
         const response = await fetch("/api/humanize", {
-          // Calls your Next.js route
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: input, action: "humanize" }),
@@ -110,14 +109,16 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
 
         if (response.status === 402) {
           toast.error("Insufficient credits!");
-          setIsProcessing(null);
           return;
         }
 
-        if (!response.ok) throw new Error();
+        if (!response.ok) {
+          const data = await response.json().catch(() => null);
+          throw new Error(data?.error || "Streaming failed");
+        }
 
         const reader = response.body?.getReader();
-        if (!reader) return;
+        if (!reader) throw new Error("No response stream available");
 
         const decoder = new TextDecoder();
         while (true) {
@@ -129,11 +130,16 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
           setOutput((prev) => prev + chunk.replace(/\*/g, ""));
           setStatus("Humanized 99%");
         }
-      } catch (error) {
-        toast.error("Streaming failed. Check backend connection.");
       }
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Request failed. Check backend connection.",
+      );
+    } finally {
+      setIsProcessing(null);
     }
-    setIsProcessing(null);
   };
 
   return (
@@ -230,10 +236,10 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
           <div className="flex-1 p-5 flex flex-col justify-between max-lg:hidden">
             {isProcessing === "score" || isProcessing === "humanize" ? (
               <div className="flex-1 mb-[30px] space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-[90%]" />
-                <Skeleton className="h-4 w-[95%]" />
-                <Skeleton className="h-4 w-[40%]" />
+                <Skeleton className="h-4 w-full bg-gray-400" />
+                <Skeleton className="h-4 w-full bg-gray-400" />
+                <Skeleton className="h-4 w-full bg-gray-400" />
+                <Skeleton className="h-4 w-full bg-gray-400" />
               </div>
             ) : (
               <textarea
@@ -252,7 +258,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
             <div className="flex items-center justify-between ">
               <div className="flex items-center justify-between ">
                 {isProcessing ? (
-                  <Skeleton className="h-5 w-32" />
+                  <Skeleton className="h-5 w-32 bg-gray-300" />
                 ) : (
                   <h1
                     className={cn(
@@ -308,10 +314,10 @@ const HumanizerField = ({ wordLimit }: { wordLimit: number }) => {
           <div className="flex-1 flex flex-col justify-between">
             {isProcessing === "score" || isProcessing === "humanize" ? (
               <div className="flex-1 mb-[30px] space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-[90%]" />
-                <Skeleton className="h-4 w-[95%]" />
-                <Skeleton className="h-4 w-[40%]" />
+                <Skeleton className="h-4 w-full bg-gray-400" />
+                <Skeleton className="h-4 w-[90%] bg-gray-400" />
+                <Skeleton className="h-4 w-[95%] bg-gray-400" />
+                <Skeleton className="h-4 w-[40%] bg-gray-400" />
               </div>
             ) : (
               <textarea

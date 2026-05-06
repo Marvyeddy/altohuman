@@ -1,6 +1,11 @@
 "use server";
 
 import { cookies } from "next/headers";
+import {
+  backendApiUrl,
+  NGROK_SKIP_BROWSER_WARNING_HEADER,
+  readApiError,
+} from "@/lib/backend-api";
 
 export async function initializePaymentAction(planName: string) {
   const cookieStore = await cookies();
@@ -8,20 +13,29 @@ export async function initializePaymentAction(planName: string) {
 
   try {
     const response = await fetch(
-      `https://humped-footwork-dividing.ngrok-free.dev/api/v1/payment/initialize/${planName.toLowerCase()}`,
+      backendApiUrl(
+        `/api/v1/payment/initialize/${planName.toLowerCase()}`,
+      ),
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
-          "Cookie": allCookies, // Manually passing the cookie from server to server
+          Cookie: allCookies,
+          ...NGROK_SKIP_BROWSER_WARNING_HEADER,
         },
-      }
+      },
     );
+
+    if (!response.ok) {
+      return {
+        error: await readApiError(response, "Failed to initialize payment"),
+      };
+    }
 
     const data = await response.json();
     return data;
   } catch (error) {
+    console.error("Payment initialization failed:", error);
     return { error: "Backend connection failed" };
   }
 }

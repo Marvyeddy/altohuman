@@ -1,5 +1,6 @@
 import Dashboard from "@/components/custom/Dashboard";
 import { auth } from "@/lib/auth";
+import { getCurrentUserData } from "@/lib/backend-api";
 import { headers } from "next/headers";
 
 const DashboardPage = async () => {
@@ -8,18 +9,7 @@ const DashboardPage = async () => {
     headers: allHeaders,
   });
 
-  const response = await fetch(
-    "https://humped-footwork-dividing.ngrok-free.dev/api/v1/user/me",
-    {
-      headers: {
-        cookie: allHeaders.get("cookie") || "",
-        "ngrok-skip-browser-warning": "true",
-      },
-      cache: "no-store",
-    },
-  );
-
-  const user_data = response.ok ? await response.json() : null;
+  const user_data = await getCurrentUserData(allHeaders.get("cookie") || "");
 
   return <Dashboard Session={session} userData={user_data} />;
 };

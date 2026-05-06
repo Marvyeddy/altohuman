@@ -3,8 +3,9 @@ import Image from "next/image";
 import Coin from "@/public/assets/coin.svg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import type { BackendUserData } from "@/lib/backend-api";
 
-const CurrentPlanPage = ({ userData }: { userData: any }) => {
+const CurrentPlanPage = ({ userData }: { userData: BackendUserData }) => {
   const lastPayment = userData?.payments?.at(-1);
 
   const amountInNaira = lastPayment ? lastPayment.amount / 100 : 0;
