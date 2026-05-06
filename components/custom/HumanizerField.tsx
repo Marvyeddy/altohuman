@@ -12,25 +12,27 @@ import Trash from "@/public/assets/Trash.svg";
 import Delete from "@/public/assets/delete.svg";
 import Copy_Dark from "@/public/assets/copy-dark.svg";
 import { toast } from "sonner";
+import { processAiAction } from "@/actions/humanize";
 
 const HumanizerField = () => {
   const [NoButton, setNoButton] = useState(false);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+  const [status, setStatus] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [activeAction, setActiveAction] = useState<"humanize" | "score" | null>(
+    null,
+  );
 
   const WORD_LIMIT = 300;
 
-  // Ref for the hidden file input
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Word count logic
   const getWordCount = (text: string) =>
     text.trim() ? text.trim().split(/\s+/).length : 0;
 
   const wordCount = getWordCount(input);
 
-  // Helper to restrict text to exactly 300 words
   const restrictToWordLimit = (text: string) => {
     const words = text.split(/\s+/).filter(Boolean);
     if (words.length > WORD_LIMIT) {
@@ -39,21 +41,18 @@ const HumanizerField = () => {
     return text;
   };
 
-  // Handle manual typing with a "Hard Stop"
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     const newWordCount = getWordCount(newValue);
 
-    // If at limit, only allow changes if the user is deleting (length gets smaller)
     if (
       wordCount >= WORD_LIMIT &&
       newValue.length > input.length &&
       newWordCount >= WORD_LIMIT
     ) {
-      return; // Do nothing, stops the typing
+      return;
     }
 
-    // If pasting a large block, trim it immediately
     if (newWordCount > WORD_LIMIT) {
       setInput(restrictToWordLimit(newValue));
     } else {
@@ -61,7 +60,6 @@ const HumanizerField = () => {
     }
   };
 
-  // Function to handle reading the text file with word restriction
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -86,26 +84,59 @@ const HumanizerField = () => {
   const handleAiAction = async (action: "humanize" | "score") => {
     if (!input.trim()) return;
     setIsProcessing(true);
+    setActiveAction(action);
 
-    try {
-      // Change this to your FastAPI URL
-      const response = await fetch("http://localhost:8000/humanize", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ text: input, action }),
-      });
+    if (action === "score") {
+      const result = await processAiAction(input, "score");
+      if (result.success) {
+        setOutput(result.text);
+        setStatus(result.message);
+      } else if (result.error === "Insufficient credits") {
+        toast.error("Out of credits! Please top up.");
+      }
+    } else {
+      setOutput("");
+      try {
+        const response = await fetch(
+          "https://humped-footwork-dividing.ngrok-free.dev/api/v1/humanize",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ text: input, action: "humanize" }),
+          },
+        );
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.detail || "Something went wrong.");
-      setOutput(data.text ?? "");
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Error");
-    } finally {
-      setIsProcessing(false);
+        // 1. Handle Credit Error
+        if (response.status === 402) {
+          toast.error("Insufficient credits to humanize this text.");
+          setIsProcessing(false);
+          return;
+        }
+
+        if (!response.ok) throw new Error("Server error");
+
+        if (!response.body) return;
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) {
+            setOutput((prev) => prev.trim().replace(/\*+/g, ""));
+            break;
+          }
+          const chunk = decoder.decode(value);
+          const cleanChunk = chunk.replace(/\*+/g, "");
+          setOutput((prev) => prev + cleanChunk);
+          setStatus("Humanized 99%");
+        }
+      } catch (error) {
+        toast.error("An error occurred. Please try again.");
+      }
     }
+    setIsProcessing(false);
   };
 
   return (
@@ -129,7 +160,7 @@ const HumanizerField = () => {
               className={cn(
                 `w-full focus:outline-none resize-none placeholder:text-black/80 p-5`,
                 input && `flex-1 mb-[15px] mt-[10px]`,
-                wordCount >= WORD_LIMIT && "caret-red-500", // Visual cue when locked
+                wordCount >= WORD_LIMIT && "caret-red-500",
               )}
               onFocus={() => setNoButton(true)}
               onBlur={() => setNoButton(false)}
@@ -195,12 +226,17 @@ const HumanizerField = () => {
             <textarea
               readOnly
               value={output}
-              className="w-full focus:outline-none resize-none placeholder:text-black/80 mb-[30px] flex-1"
+              className={cn(
+                "w-full focus:outline-none resize-none placeholder:text-black/80 mb-[30px] flex-1 transition-colors duration-300",
+                activeAction === "humanize"
+                  ? "text-green-600 font-medium"
+                  : "text-black",
+              )}
               placeholder="Results will appear here..."
             />
 
             <div className="flex items-center justify-between ">
-              <h1 className="font-semibold">Result 😂😂</h1>
+              <h1 className="font-semibold">{status}</h1>
 
               <div className="flex items-center gap-4">
                 <Button
@@ -216,7 +252,10 @@ const HumanizerField = () => {
                   size={"icon"}
                   className="shadow-sm shadow-[#0000004D]"
                   title="delete"
-                  onClick={() => setOutput("")}
+                  onClick={() => {
+                    setOutput("");
+                    setActiveAction(null);
+                  }}
                 >
                   <Image src={Trash} alt="Trash" />
                 </Button>
@@ -236,7 +275,12 @@ const HumanizerField = () => {
             <textarea
               readOnly
               value={output}
-              className="w-full focus:outline-none resize-none placeholder:text-black/80 mb-[30px] flex-1 p-5"
+              className={cn(
+                "w-full focus:outline-none resize-none placeholder:text-black/80 mb-[30px] flex-1 transition-colors duration-300",
+                activeAction === "humanize"
+                  ? "text-green-600 font-medium"
+                  : "text-black",
+              )}
               placeholder="Results will appear here..."
             />
 
@@ -245,7 +289,10 @@ const HumanizerField = () => {
 
               <div className="flex gap-7 items-center justify-center mb-5">
                 <Button
-                  onClick={() => setOutput("")}
+                  onClick={() => {
+                    setOutput("");
+                    setActiveAction(null);
+                  }}
                   className="text-red-500 shadow-sm shadow-[#0000004D] rounded-full font-extrabold"
                 >
                   Delete
