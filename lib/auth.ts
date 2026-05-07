@@ -10,6 +10,9 @@ export const auth = betterAuth({
     database: new Pool({
         connectionString:process.env.DATABASE_URL
     }),
+    trustedOrigins: [
+        "https://altohuman-server.onrender.com" // Your Render backend
+    ],
     logger: {
         level: "debug", // This will print the specific DB error in your terminal
     },
