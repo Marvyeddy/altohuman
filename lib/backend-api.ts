@@ -1,12 +1,12 @@
 const DEFAULT_BACKEND_API_URL =
-  "https://humped-footwork-dividing.ngrok-free.dev";
+  "https://altohuman-server.onrender.com";
 
 export const BACKEND_API_URL =
   process.env.BACKEND_API_URL?.replace(/\/$/, "") || DEFAULT_BACKEND_API_URL;
 
-export const NGROK_SKIP_BROWSER_WARNING_HEADER = {
-  "ngrok-skip-browser-warning": "true",
-} as const;
+// export const NGROK_SKIP_BROWSER_WARNING_HEADER = {
+//   "ngrok-skip-browser-warning": "true",
+// } as const;
 
 export type BackendPayment = {
   amount: number;
@@ -49,7 +49,7 @@ export async function getCurrentUserData(
     const response = await fetch(backendApiUrl("/api/v1/user/me"), {
       headers: {
         cookie: cookieHeader,
-        ...NGROK_SKIP_BROWSER_WARNING_HEADER,
+        // ...NGROK_SKIP_BROWSER_WARNING_HEADER,
       },
       cache: "no-store",
     });

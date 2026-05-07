@@ -1,6 +1,6 @@
 import {
   backendApiUrl,
-  NGROK_SKIP_BROWSER_WARNING_HEADER,
+  // NGROK_SKIP_BROWSER_WARNING_HEADER,
   readApiError,
 } from "@/lib/backend-api";
 import { cookies } from "next/headers";
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       headers: {
         "Content-Type": "application/json",
         Cookie: allCookies,
-        ...NGROK_SKIP_BROWSER_WARNING_HEADER,
+        // ...NGROK_SKIP_BROWSER_WARNING_HEADER,
       },
       body: JSON.stringify(body),
     });

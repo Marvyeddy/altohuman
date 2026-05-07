@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import {
   backendApiUrl,
-  NGROK_SKIP_BROWSER_WARNING_HEADER,
+  // NGROK_SKIP_BROWSER_WARNING_HEADER,
   readApiError,
 } from "@/lib/backend-api";
 
@@ -17,7 +17,7 @@ export async function processAiAction(text: string, action: "score") {
       headers: {
         "Content-Type": "application/json",
         Cookie: allCookies,
-        ...NGROK_SKIP_BROWSER_WARNING_HEADER,
+        // ...NGROK_SKIP_BROWSER_WARNING_HEADER,
       },
       body: JSON.stringify({ text, action }),
     });
