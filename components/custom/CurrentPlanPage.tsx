@@ -18,7 +18,9 @@ const CurrentPlanPage = ({ userData }: { userData: BackendUserData }) => {
 
       <div>
         <div className="flex items-center gap-2">
-          <span className="text-[35px]">₦{amountInNaira.toLocaleString()}</span>
+          <span className="text-[35px] max-md:text-[20px]">
+            ₦{amountInNaira.toLocaleString()}
+          </span>
           <div className="flex items-center text-xs font-bold bg-[#F895001F] w-fit rounded-full py-1 px-2 gap-1">
             <Image src={Coin} alt="coin" />
             {userData?.credit ?? 0}

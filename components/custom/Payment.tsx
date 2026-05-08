@@ -108,7 +108,7 @@ const Payment = ({
             </li>
           </ul>
           <div className="flex-1">
-            <div className="flex items-center gap-4 py-[9px] px-3 border border-[#00000036] rounded-full w-fit ml-auto">
+            <div className="flex items-center gap-4 py-[9px] px-3 border border-[#00000036] max-md:border-none rounded-full w-fit ml-auto">
               <Image src={Avatar} alt="avatar" />
               <div className="max-md:hidden">
                 <Typography.P className="font-medium">

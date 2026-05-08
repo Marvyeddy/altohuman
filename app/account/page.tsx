@@ -18,8 +18,10 @@ const AccountPage = () => {
             href={"/dashboard"}
             className="flex items-center w-fit gap-1 hover:underline underline-offset-4"
           >
-            <ChevronLeft />
-            <Typography.P>Back to humanizer</Typography.P>
+            <ChevronLeft className="size-6" />
+            <Typography.P className="max-md:hidden">
+              Back to humanizer
+            </Typography.P>
           </Link>
         </div>
 
