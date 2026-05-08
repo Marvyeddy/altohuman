@@ -15,9 +15,12 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { logoutAction } from "@/actions/auth";
+import { useState } from "react";
+import { Loader2Icon } from "lucide-react";
 
 const Navbar = ({ Session }: { Session: any }) => {
   const { signOut } = authClient;
+  const [isLoading, setIsLoading] = useState(false);
 
   // Use server data if client data hasn't loaded yet
   const session = Session;
@@ -82,15 +85,24 @@ const Navbar = ({ Session }: { Session: any }) => {
 
             {session ? (
               <div className="flex flex-col gap-4 mt-4">
-                <Button
-                  variant="link"
-                  className="text-black font-semibold text-lg px-0 justify-center"
-                  onClick={async () => {
-                    await logoutAction();
-                  }}
-                >
-                  Log out
-                </Button>
+                {isLoading ? (
+                  <Loader2Icon className="animate-spin text-red-500" />
+                ) : (
+                  <Button
+                    variant="link"
+                    className="text-black font-semibold text-lg px-0 justify-center"
+                    onClick={async () => {
+                      setIsLoading(true); // Start loading first!
+                      try {
+                        await logoutAction();
+                      } catch (error) {
+                        setIsLoading(false); // Reset if it fails so they can try again
+                      }
+                    }}
+                  >
+                    Log out
+                  </Button>
+                )}
 
                 <Button
                   className="bg-black text-white rounded-full font-extrabold text-lg py-2 w-fit mx-auto"
@@ -146,15 +158,24 @@ const Navbar = ({ Session }: { Session: any }) => {
 
         {session ? (
           <div className="justify-end space-x-2 flex items-center flex-1">
-            <Button
-              variant={"link"}
-              className="text-white"
-              onClick={async () => {
-                await logoutAction();
-              }}
-            >
-              Log out
-            </Button>
+            {isLoading ? (
+              <Loader2Icon className="animate-spin text-red-500" />
+            ) : (
+              <Button
+                variant={"link"}
+                className="text-white"
+                onClick={async () => {
+                  setIsLoading(true); // Start loading first!
+                  try {
+                    await logoutAction();
+                  } catch (error) {
+                    setIsLoading(false); // Reset if it fails so they can try again
+                  }
+                }}
+              >
+                Log out
+              </Button>
+            )}
             <Button className="font-extrabold bg-white rounded-full" asChild>
               <Link href={"/account"}>My Account</Link>
             </Button>

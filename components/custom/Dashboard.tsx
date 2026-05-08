@@ -8,8 +8,13 @@ import Star from "@/public/assets/hero-sparkle.svg";
 import HumanizerField from "./HumanizerField";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { LogOutIcon, User2, UserCheck2Icon } from "lucide-react";
-import { useEffect } from "react";
+import {
+  LoaderCircleIcon,
+  LogOutIcon,
+  User2,
+  UserCheck2Icon,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { logoutAction } from "@/actions/auth";
 import type { BackendUserData } from "@/lib/backend-api";
@@ -29,6 +34,7 @@ const Dashboard = ({
 }) => {
   const router = useRouter();
   const session = Session;
+  const [isLoading, setIsLoading] = useState(false);
 
   const searchParams = useSearchParams();
 
@@ -48,30 +54,50 @@ const Dashboard = ({
           </Link>
 
           <div className="space-x-3 flex items-center">
+            {isLoading ? (
+              <LoaderCircleIcon className="text-red-400 animate-spin" />
+            ) : (
+              <>
+                <Button
+                  variant={"link"}
+                  className="text-white hover:text-red-400 max-md:hidden"
+                  onClick={async () => {
+                    setIsLoading(true);
+                    try {
+                      await logoutAction();
+                    } catch (error) {
+                      setIsLoading(false);
+                    }
+                  }}
+                >
+                  Log out
+                </Button>
+                <Button
+                  className="bg-white rounded-full md:hidden"
+                  size={"icon"}
+                  title="Exit"
+                  onClick={async () => {
+                    setIsLoading(true);
+                    try {
+                      await logoutAction();
+                    } catch (error) {
+                      setIsLoading(false);
+                    }
+                  }}
+                >
+                  <LogOutIcon className="text-red-400" />
+                </Button>
+              </>
+            )}
+
             <Button
-              variant={"link"}
-              className="text-white hover:text-red-400 max-md:hidden"
-              onClick={async () => {
-                await logoutAction();
-              }}
+              className="font-extrabold bg-white rounded-full max-md:hidden"
+              asChild
             >
-              Log out
-            </Button>
-            <Button
-              className="bg-white rounded-full md:hidden"
-              size={"icon"}
-              title="Exit"
-              onClick={async () => {
-                await logoutAction();
-              }}
-            >
-              <LogOutIcon className="text-red-400" />
-            </Button>
-            <Button className="font-extrabold bg-white rounded-full" asChild>
               <Link href={"/account"}>My Account</Link>
             </Button>
             <Button
-              className="font-extrabold bg-white rounded-full"
+              className="font-extrabold bg-white rounded-full md:hidden"
               size={"icon"}
               asChild
             >

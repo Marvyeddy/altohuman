@@ -1,15 +1,17 @@
 "use client";
 
 import Typography from "@/components/ui/Typography";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader2Icon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/public/assets/logo-dark.svg";
 import { Button } from "@/components/ui/button";
 import Profile from "@/public/assets/profile.svg";
 import { logoutAction } from "@/actions/auth";
+import { useState } from "react";
 
 const AccountPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <div className="w-full">
       <nav className="flex items-center justify-between lg:px-[120px] py-6 pt-[15px] border-b border-[#E8E8E8] mb-[77px]">
@@ -28,14 +30,23 @@ const AccountPage = () => {
         <Image src={Logo} alt="dark-logo" className="max-md:hidden" />
 
         <div className="lg:flex-1 flex justify-end ">
-          <Button
-            variant={"link"}
-            onClick={async () => {
-              await logoutAction();
-            }}
-          >
-            Log out
-          </Button>
+          {isLoading ? (
+            <Loader2Icon className="animate-spin text-red-500" />
+          ) : (
+            <Button
+              variant={"link"}
+              onClick={async () => {
+                setIsLoading(true);
+                try {
+                  await logoutAction();
+                } catch (error) {
+                  setIsLoading(false);
+                }
+              }}
+            >
+              Log out
+            </Button>
+          )}
         </div>
       </nav>
 
