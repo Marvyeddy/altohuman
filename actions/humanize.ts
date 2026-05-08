@@ -1,51 +1,50 @@
-"use server";
-
+import { backendApiUrl, readApiError } from "@/lib/backend-api";
 import { cookies } from "next/headers";
-import {
-  backendApiUrl,
-  // NGROK_SKIP_BROWSER_WARNING_HEADER,
-  readApiError,
-} from "@/lib/backend-api";
 import { redirect } from "next/navigation";
 
+// processAiAction.ts
 export async function processAiAction(text: string, action: "score") {
   const cookieStore = await cookies();
-
   const session = cookieStore.get("session"); 
+  
   if (!session) {
     redirect("/login"); 
   }
 
-  const allCookies = cookieStore.toString();
+  // 1. Declare a variable to store the response status
+  let responseStatus = 200;
 
   try {
     const response = await fetch(backendApiUrl("/api/v1/humanize"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Cookie: allCookies,
-        // ...NGROK_SKIP_BROWSER_WARNING_HEADER,
+        Cookie: cookieStore.toString(),
       },
       body: JSON.stringify({ text, action }),
     });
 
-    if (response.status === 401) {
-      redirect("/login");
+    responseStatus = response.status;
+
+    if (response.ok) {
+      const data = await response.json();
+      return { success: true, text: data.text, message: data.message };
     }
 
-    if (!response.ok) {
-      return {
+    // Don't call redirect inside try/catch!
+    if (responseStatus !== 401) {
+       return {
         success: false,
-        error: await readApiError(response, "Scoring Error, Login to continue"),
+        error: await readApiError(response, "Scoring Error"),
       };
     }
-
-    const data = await response.json();
-
-    return { success: true, text: data.text, message: data.message };
   } catch (error) {
     console.error("AI score request failed:", error);
     return { success: false, error: "Scoring Error, Login to continue" };
   }
-}
 
+  // 3. Trigger redirect outside the try/catch
+  if (responseStatus === 401) {
+    redirect("/login");
+  }
+}

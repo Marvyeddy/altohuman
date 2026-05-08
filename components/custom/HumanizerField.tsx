@@ -95,10 +95,13 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
     try {
       if (action === "score") {
         const result = await processAiAction(input, "score");
+
+        // If result is undefined or null, a redirect likely happened
+        if (!result) return;
+
         if (result.success) {
           setOutput(result.text);
           setStatus(result.message);
-
           router.refresh();
         } else {
           toast.error(result.error || "Checking failed");
@@ -111,7 +114,6 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
           body: JSON.stringify({ text: input, action: "humanize" }),
         });
 
-        // 1. Check for Unauthorized (No Session)
         if (response.status === 401) {
           toast.error("Session expired. Please login.");
           router.push("/login");
@@ -144,7 +146,15 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
           setStatus("Humanized 99%");
         }
       }
-    } catch (error) {
+    } catch (error: any) {
+      // FIX: Ignore the internal Next.js redirect error so no toast shows up
+      if (
+        error?.message === "NEXT_REDIRECT" ||
+        error?.digest?.includes("NEXT_REDIRECT")
+      ) {
+        throw error;
+      }
+
       toast.error(
         error instanceof Error
           ? error.message
