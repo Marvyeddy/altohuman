@@ -156,7 +156,7 @@ const Login = () => {
             </div>
 
             <Button className="bg-black text-white font-bold rounded-full mt-6 max-lg:mt-3">
-              Log in
+              {isSubmitting ? "Logging in..." : "Log in"}
             </Button>
             <Button
               className="font-bold rounded-full border border-[#CDD0D5]"
