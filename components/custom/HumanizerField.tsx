@@ -17,14 +17,7 @@ import { LoaderIcon } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
 
-const HumanizerField = ({
-  wordLimit,
-  Session,
-}: {
-  wordLimit?: number;
-  Session: any;
-}) => {
-  const session = Session;
+const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
   const router = useRouter();
   const [NoButton, setNoButton] = useState(false);
   const [input, setInput] = useState("");
@@ -95,11 +88,6 @@ const HumanizerField = ({
   };
 
   const handleAiAction = async (action: "humanize" | "score") => {
-    if (!session) {
-      router.push("/login");
-      return;
-    }
-
     if (!input.trim()) return;
     setIsProcessing(action);
     setActiveAction(action);
@@ -123,6 +111,13 @@ const HumanizerField = ({
           body: JSON.stringify({ text: input, action: "humanize" }),
         });
 
+        // 1. Check for Unauthorized (No Session)
+        if (response.status === 401) {
+          toast.error("Session expired. Please login.");
+          router.push("/login");
+          return;
+        }
+
         if (response.status === 402) {
           toast.error("Insufficient credits!");
           return;
@@ -140,13 +135,11 @@ const HumanizerField = ({
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
-            // 4. Refresh credits once the stream is finished
             router.refresh();
             break;
           }
 
           const chunk = decoder.decode(value);
-          // Clean and append
           setOutput((prev) => prev + chunk.replace(/\*/g, ""));
           setStatus("Humanized 99%");
         }

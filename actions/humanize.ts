@@ -6,9 +6,16 @@ import {
   // NGROK_SKIP_BROWSER_WARNING_HEADER,
   readApiError,
 } from "@/lib/backend-api";
+import { redirect } from "next/navigation";
 
 export async function processAiAction(text: string, action: "score") {
   const cookieStore = await cookies();
+
+  const session = cookieStore.get("session"); 
+  if (!session) {
+    redirect("/login"); 
+  }
+
   const allCookies = cookieStore.toString();
 
   try {
@@ -21,6 +28,10 @@ export async function processAiAction(text: string, action: "score") {
       },
       body: JSON.stringify({ text, action }),
     });
+
+    if (response.status === 401) {
+      redirect("/login");
+    }
 
     if (!response.ok) {
       return {
