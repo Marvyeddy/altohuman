@@ -15,15 +15,11 @@ export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL, 
     advanced: {
         defaultCookieAttributes: {
-            sameSite: "lax", // Required for cross-domain cookies
+            sameSite: "none", // Required for cross-domain cookies
             secure: true,
             httpOnly: true, 
-            partitioned: true
         }
     },
-    trustedOrigins: [
-        "https://altohuman.vercel.app" // Your FRONTEND URL
-    ],
     user:{
         deleteUser: {
             enabled: true,
