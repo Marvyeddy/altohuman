@@ -7,20 +7,13 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const auth = betterAuth({
     database: new Pool({
-        connectionString:process.env.DATABASE_URL
+        connectionString:process.env.DATABASE_URL,
     }),
     logger: {
         level: "debug", // This will print the specific DB error in your terminal
     },
-    baseURL: "https://altohuman.vercel.app", 
-    trustedOrigins: [
-        "https://altohuman.vercel.app",
-        "https://altohuman-server.onrender.com"// Your Render backend
-    ],
+    baseURL: process.env.BETTER_AUTH_URL, 
     advanced: {
-        crossOriginCookies: {
-            enabled: true // Essential for Vercel -> Render communication
-        },
         defaultCookieAttributes: {
             sameSite: "none", // Required for cross-domain cookies
             secure: true,
