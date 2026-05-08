@@ -1,3 +1,5 @@
+'use server'
+
 import { backendApiUrl, readApiError } from "@/lib/backend-api";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -11,7 +13,6 @@ export async function processAiAction(text: string, action: "score") {
     redirect("/login"); 
   }
 
-  // 1. Declare a variable to store the response status
   let responseStatus = 200;
 
   try {
