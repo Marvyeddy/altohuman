@@ -8,7 +8,7 @@ import Star from "@/public/assets/hero-sparkle.svg";
 import HumanizerField from "./HumanizerField";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { LogOutIcon, UserCheck2Icon } from "lucide-react";
+import { LogOutIcon, User2, UserCheck2Icon } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { logoutAction } from "@/actions/auth";
@@ -59,11 +59,21 @@ const Dashboard = ({
               className="bg-white rounded-full md:hidden"
               size={"icon"}
               title="Exit"
+              onClick={() => logoutAction()}
             >
               <LogOutIcon className="text-red-400" />
             </Button>
             <Button className="font-extrabold bg-white rounded-full" asChild>
               <Link href={"/account"}>My Account</Link>
+            </Button>
+            <Button
+              className="font-extrabold bg-white rounded-full"
+              size={"icon"}
+              asChild
+            >
+              <Link href={"/account"}>
+                <User2 color="black" />
+              </Link>
             </Button>
           </div>
         </nav>
