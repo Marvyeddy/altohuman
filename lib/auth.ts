@@ -2,7 +2,6 @@ import { betterAuth } from "better-auth";
 import {Pool} from 'pg'
 import { getEmailTemplate } from "./email-helper";
 import { Resend } from "resend";
-import { customSession } from "better-auth/plugins";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -10,15 +9,20 @@ export const auth = betterAuth({
     database: new Pool({
         connectionString:process.env.DATABASE_URL
     }),
-    trustedOrigins: [
-        "https://altohuman-server.onrender.com" // Your Render backend
-    ],
     logger: {
         level: "debug", // This will print the specific DB error in your terminal
     },
-    advanced:{
-        defaultCookieAttributes:{
-            sameSite: "none",
+    baseURL: "https://altohuman.vercel.app", 
+    trustedOrigins: [
+        "https://altohuman.vercel.app",
+        "https://altohuman-server.onrender.com"// Your Render backend
+    ],
+    advanced: {
+        crossOriginCookies: {
+            enabled: true // Essential for Vercel -> Render communication
+        },
+        defaultCookieAttributes: {
+            sameSite: "none", // Required for cross-domain cookies
             secure: true,
             httpOnly: true
         }
