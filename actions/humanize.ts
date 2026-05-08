@@ -1,19 +1,15 @@
-'use server'
-
-import { backendApiUrl, readApiError } from "@/lib/backend-api";
+"use server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { backendApiUrl, readApiError } from "@/lib/backend-api";
 
-// processAiAction.ts
 export async function processAiAction(text: string, action: "score") {
   const cookieStore = await cookies();
-  const session = cookieStore.get("session"); 
-  
-  if (!session) {
-    redirect("/login"); 
-  }
+  const session = cookieStore.get("session");
 
-  let responseStatus = 200;
+  if (!session) {
+    redirect("/login");
+  }
 
   try {
     const response = await fetch(backendApiUrl("/api/v1/humanize"), {
@@ -25,27 +21,29 @@ export async function processAiAction(text: string, action: "score") {
       body: JSON.stringify({ text, action }),
     });
 
-    responseStatus = response.status;
-
-    if (response.ok) {
-      const data = await response.json();
-      return { success: true, text: data.text, message: data.message };
+    // 1. Handle Unauthorised separately (must be outside try/catch to redirect)
+    if (response.status === 401) {
+      // We will handle the actual redirect outside the catch
+      return { success: false, error: "UNAUTHORIZED" };
     }
 
-    // Don't call redirect inside try/catch!
-    if (responseStatus !== 401) {
-       return {
-        success: false,
-        error: await readApiError(response, "Scoring Error"),
-      };
+    // 2. Handle specific credit errors (402)
+    if (response.status === 402) {
+      return { success: false, error: "Insufficient credits!" };
     }
+
+    if (!response.ok) {
+      const errorMsg = await readApiError(response, "Scoring Error");
+      return { success: false, error: errorMsg };
+    }
+
+    const data = await response.json();
+    return { success: true, text: data.text, message: data.message };
+
   } catch (error) {
-    console.error("AI score request failed:", error);
-    return { success: false, error: "Scoring Error, Login to continue" };
-  }
-
-  // 3. Trigger redirect outside the try/catch
-  if (responseStatus === 401) {
-    redirect("/login");
+    // If it's a redirect error from a nested function, rethrow it
+    if (error && typeof error === 'object' && 'digest' in error) throw error;
+    
+    return { success: false, error: "Backend connection failed" };
   }
 }

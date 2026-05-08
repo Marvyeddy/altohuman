@@ -5,7 +5,7 @@ import { Separator } from "../ui/separator";
 import Image from "next/image";
 import Upload from "@/public/assets/upload.svg";
 import { Button } from "../ui/button";
-import { useState, useRef, type ChangeEvent } from "react";
+import { useState, useRef, type ChangeEvent, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import Copy from "@/public/assets/Copy.svg";
 import Trash from "@/public/assets/Trash.svg";
@@ -29,6 +29,12 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
   const [activeAction, setActiveAction] = useState<"humanize" | "score" | null>(
     null,
   );
+
+  useEffect(() => {
+    if (activeAction && window.innerWidth < 1024) {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+  }, [activeAction]);
 
   const WORD_LIMIT = wordLimit || 300;
 
@@ -96,9 +102,23 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
       if (action === "score") {
         const result = await processAiAction(input, "score");
 
-        // If result is undefined or null, a redirect likely happened
+        // 1. If result is null, the Server Action likely handled a redirect
         if (!result) return;
 
+        // 2. Handle unauthorized (401) returned as an error string
+        if (result.error === "UNAUTHORIZED") {
+          toast.error("Session expired. Please login.");
+          router.push("/login");
+          return;
+        }
+
+        // 3. Handle insufficient credits (402)
+        if (result.error?.includes("credits")) {
+          toast.error("Insufficient credits!");
+          return;
+        }
+
+        // 4. Handle success vs other errors
         if (result.success) {
           setOutput(result.text);
           setStatus(result.message);
@@ -107,6 +127,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
           toast.error(result.error || "Checking failed");
         }
       } else {
+        // Humanize logic (Keep as is, already works well)
         setOutput("");
         const response = await fetch("/api/humanize", {
           method: "POST",
@@ -140,14 +161,13 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
             router.refresh();
             break;
           }
-
           const chunk = decoder.decode(value);
           setOutput((prev) => prev + chunk.replace(/\*/g, ""));
           setStatus("Humanized 99%");
         }
       }
     } catch (error: any) {
-      // FIX: Ignore the internal Next.js redirect error so no toast shows up
+      // Prevent Next.js redirect from triggering an error toast
       if (
         error?.message === "NEXT_REDIRECT" ||
         error?.digest?.includes("NEXT_REDIRECT")
@@ -329,19 +349,17 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
       </div>
 
       {/* Mobile Result Section */}
-      {activeAction && (
-        <>
-          <h2 className="text-white font-semibold text-[18px] mt-[18px] mb-3 lg:hidden">
-            Result
-          </h2>
-          <div className="bg-[#FFFFFF1A] p-3 rounded-[37px] lg:hidden">
-            <Card className="rounded-3xl h-[427px] flex flex-row p-5">
-              <div className="flex-1 flex flex-col justify-between">
-                {isProcessing === "score" || isProcessing === "humanize" ? (
-                  <div className="flex-1 mb-[30px] space-y-2">
+      {/* Mobile Result Section - Ensure it's reachable */}
+      {(activeAction || isProcessing) && (
+        <div className="lg:hidden mt-5">
+          <h2 className="text-white font-semibold text-[18px] mb-3">Result</h2>
+          <div className="bg-[#FFFFFF1A] p-3 rounded-[37px]">
+            <Card className="rounded-3xl h-[350px] flex flex-col p-5 overflow-hidden">
+              <div className="flex-1 flex flex-col">
+                {isProcessing ? (
+                  <div className="flex-1 space-y-3">
                     <Skeleton className="h-4 w-full bg-gray-400" />
                     <Skeleton className="h-4 w-[90%] bg-gray-400" />
-                    <Skeleton className="h-4 w-[95%] bg-gray-400" />
                     <Skeleton className="h-4 w-[40%] bg-gray-400" />
                   </div>
                 ) : (
@@ -349,22 +367,20 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
                     readOnly
                     value={output}
                     className={cn(
-                      "w-full focus:outline-none resize-none placeholder:text-black/80 mb-[10px] flex-1 transition-colors duration-300",
+                      "w-full focus:outline-none resize-none flex-1 text-sm bg-transparent",
                       activeAction === "humanize"
-                        ? "text-green-600 font-medium"
+                        ? "text-green-600"
                         : "text-black",
                     )}
-                    placeholder="Results will appear here..."
                   />
                 )}
 
-                <div className="flex items-center justify-center">
-                  {isProcessing ? (
-                    <Skeleton className="h-5 w-32 bg-gray-300" />
-                  ) : (
+                <div className="mt-auto">
+                  <Separator className="bg-gray-300 my-4 opacity-40" />
+                  <div className="flex items-center justify-between">
                     <h1
                       className={cn(
-                        "font-semibold text-sm",
+                        "font-bold text-sm",
                         activeAction === "humanize"
                           ? "text-green-500"
                           : "text-red-600",
@@ -372,44 +388,100 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
                     >
                       {status}
                     </h1>
-                  )}
-                  {/* Buttons... */}
-                </div>
-                <div>
-                  <Separator className="bg-[#939393] lg:hidden opacity-40 mt-2 mb-5" />
 
-                  <div className="flex gap-7 items-center justify-center mb-5">
-                    <Button
-                      onClick={() => {
-                        setOutput("");
-                        setActiveAction(null);
-                      }}
-                      className="text-red-500 shadow-sm shadow-[#0000004D] rounded-full font-extrabold"
-                    >
-                      Delete
-                      <span>
-                        <Image src={Delete} alt="trash" />
-                      </span>
-                    </Button>
-
-                    <Button
-                      onClick={() => {
-                        navigator.clipboard.writeText(output);
-                        toast.success("Text copied to clipboard!");
-                      }}
-                      className="shadow-sm shadow-[#0000004D] font-extrabold rounded-full"
-                    >
-                      Copy
-                      <span>
-                        <Image src={Copy_Dark} alt="copy" />
-                      </span>
-                    </Button>
+                    <div className="flex gap-3">
+                      <Button
+                        size="icon"
+                        onClick={() => {
+                          navigator.clipboard.writeText(output);
+                          toast.success("Copied!");
+                        }}
+                      >
+                        <Image src={Copy} alt="copy" className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        onClick={() => {
+                          setOutput("");
+                          setActiveAction(null);
+                        }}
+                      >
+                        <Image src={Trash} alt="delete" className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
             </Card>
           </div>
-        </>
+        </div>
+      )}
+      {/* Mobile Result Section - Ensure it's reachable */}
+      {(activeAction || isProcessing) && (
+        <div className="lg:hidden mt-5">
+          <h2 className="text-white font-semibold text-[18px] mb-3">Result</h2>
+          <div className="bg-[#FFFFFF1A] p-3 rounded-[37px]">
+            <Card className="rounded-3xl h-[350px] flex flex-col p-5 overflow-hidden">
+              <div className="flex-1 flex flex-col">
+                {isProcessing ? (
+                  <div className="flex-1 space-y-3">
+                    <Skeleton className="h-4 w-full bg-gray-400" />
+                    <Skeleton className="h-4 w-[90%] bg-gray-400" />
+                    <Skeleton className="h-4 w-[40%] bg-gray-400" />
+                  </div>
+                ) : (
+                  <textarea
+                    readOnly
+                    value={output}
+                    className={cn(
+                      "w-full focus:outline-none resize-none flex-1 text-sm bg-transparent",
+                      activeAction === "humanize"
+                        ? "text-green-600"
+                        : "text-black",
+                    )}
+                  />
+                )}
+
+                <div className="mt-auto">
+                  <Separator className="bg-gray-300 my-4 opacity-40" />
+                  <div className="flex items-center justify-between">
+                    <h1
+                      className={cn(
+                        "font-bold text-sm",
+                        activeAction === "humanize"
+                          ? "text-green-500"
+                          : "text-red-600",
+                      )}
+                    >
+                      {status}
+                    </h1>
+
+                    <div className="flex gap-3">
+                      <Button
+                        size="icon"
+                        onClick={() => {
+                          navigator.clipboard.writeText(output);
+                          toast.success("Copied!");
+                        }}
+                      >
+                        <Image src={Copy} alt="copy" className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        onClick={() => {
+                          setOutput("");
+                          setActiveAction(null);
+                        }}
+                      >
+                        <Image src={Trash} alt="delete" className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
       )}
     </>
   );
