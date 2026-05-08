@@ -15,8 +15,10 @@ import { toast } from "sonner";
 import { processAiAction } from "@/actions/humanize";
 import { LoaderIcon } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
+import { useRouter } from "next/navigation";
 
 const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
+  const router = useRouter();
   const [NoButton, setNoButton] = useState(false);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
@@ -96,6 +98,8 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
         if (result.success) {
           setOutput(result.text);
           setStatus(result.message);
+
+          router.refresh();
         } else {
           toast.error(result.error || "Checking failed");
         }
@@ -123,7 +127,11 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
         const decoder = new TextDecoder();
         while (true) {
           const { value, done } = await reader.read();
-          if (done) break;
+          if (done) {
+            // 4. Refresh credits once the stream is finished
+            router.refresh();
+            break;
+          }
 
           const chunk = decoder.decode(value);
           // Clean and append
