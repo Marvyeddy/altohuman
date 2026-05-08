@@ -10,7 +10,14 @@ export async function logoutAction() {
   });
 
   const cookieStore = await cookies();
-  cookieStore.delete("__Secure-better-auth.session_token");
+  const allCookies = cookieStore.getAll();
 
+  allCookies.forEach((cookie) => {
+    if (cookie.name.includes("better-auth.session_token")) {
+      cookieStore.delete(cookie.name);
+    }
+  });
+
+  // 3. Redirect to the home page
   redirect("/");
 }

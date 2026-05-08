@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import {Pool} from 'pg'
 import { getEmailTemplate } from "./email-helper";
 import { Resend } from "resend";
+import {nextCookies} from 'better-auth/next-js'
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -100,4 +101,5 @@ export const auth = betterAuth({
           clientSecret: process.env.GOOGLE_CLIENT_SECRET as string, 
         }, 
     },
+    plugins: [nextCookies()]
 });
