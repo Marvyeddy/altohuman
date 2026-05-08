@@ -53,6 +53,13 @@ const Navbar = ({ Session }: { Session: any }) => {
           <Image src={Logo} alt="logo" width={24} height={24} loading="eager" />
         </Link>
 
+        <Link
+          href={"/dashboard"}
+          className="text-white hover:opacity-50 transition-colors text-xs"
+        >
+          Dashboard
+        </Link>
+
         <Sheet>
           <SheetTrigger>
             <div>

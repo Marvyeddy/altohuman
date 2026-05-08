@@ -129,6 +129,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
       } else {
         // Humanize logic (Keep as is, already works well)
         setOutput("");
+        setStatus("");
         const response = await fetch("/api/humanize", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
