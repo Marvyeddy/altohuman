@@ -354,7 +354,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
         <div className="lg:hidden mt-5">
           <h2 className="text-white font-semibold text-[18px] mb-3">Result</h2>
           <div className="bg-[#FFFFFF1A] p-3 rounded-[37px]">
-            <Card className="rounded-3xl h-[350px] flex flex-col p-5 overflow-hidden">
+            <Card className="rounded-3xl h-[427px] flex flex-col p-5 overflow-hidden">
               <div className="flex-1 flex flex-col">
                 {isProcessing ? (
                   <div className="flex-1 space-y-3">
@@ -367,7 +367,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
                     readOnly
                     value={output}
                     className={cn(
-                      "w-full focus:outline-none resize-none flex-1 text-sm bg-transparent",
+                      "w-full focus:outline-none resize-none placeholder:text-black/80 p-5",
                       activeAction === "humanize"
                         ? "text-green-600"
                         : "text-black",
