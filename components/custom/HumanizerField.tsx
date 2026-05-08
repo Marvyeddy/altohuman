@@ -314,67 +314,88 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
       </div>
 
       {/* Mobile Result Section */}
-      <h2 className="text-white font-semibold text-[18px] mt-[18px] mb-3 lg:hidden">
-        Result
-      </h2>
-      <div className="bg-[#FFFFFF1A] p-3 rounded-[37px] lg:hidden">
-        <Card className="rounded-3xl h-[427px] flex flex-row py-0">
-          <div className="flex-1 flex flex-col justify-between">
-            {isProcessing === "score" || isProcessing === "humanize" ? (
-              <div className="flex-1 mb-[30px] space-y-2">
-                <Skeleton className="h-4 w-full bg-gray-400" />
-                <Skeleton className="h-4 w-[90%] bg-gray-400" />
-                <Skeleton className="h-4 w-[95%] bg-gray-400" />
-                <Skeleton className="h-4 w-[40%] bg-gray-400" />
-              </div>
-            ) : (
-              <textarea
-                readOnly
-                value={output}
-                className={cn(
-                  "w-full focus:outline-none resize-none placeholder:text-black/80 mb-[30px] flex-1 transition-colors duration-300",
-                  activeAction === "humanize"
-                    ? "text-green-600 font-medium"
-                    : "text-black",
+      {activeAction && (
+        <>
+          <h2 className="text-white font-semibold text-[18px] mt-[18px] mb-3 lg:hidden">
+            Result
+          </h2>
+          <div className="bg-[#FFFFFF1A] p-3 rounded-[37px] lg:hidden">
+            <Card className="rounded-3xl h-[427px] flex flex-row p-5">
+              <div className="flex-1 flex flex-col justify-between">
+                {isProcessing === "score" || isProcessing === "humanize" ? (
+                  <div className="flex-1 mb-[30px] space-y-2">
+                    <Skeleton className="h-4 w-full bg-gray-400" />
+                    <Skeleton className="h-4 w-[90%] bg-gray-400" />
+                    <Skeleton className="h-4 w-[95%] bg-gray-400" />
+                    <Skeleton className="h-4 w-[40%] bg-gray-400" />
+                  </div>
+                ) : (
+                  <textarea
+                    readOnly
+                    value={output}
+                    className={cn(
+                      "w-full focus:outline-none resize-none placeholder:text-black/80 mb-[10px] flex-1 transition-colors duration-300",
+                      activeAction === "humanize"
+                        ? "text-green-600 font-medium"
+                        : "text-black",
+                    )}
+                    placeholder="Results will appear here..."
+                  />
                 )}
-                placeholder="Results will appear here..."
-              />
-            )}
 
-            <div>
-              <Separator className="bg-[#939393] lg:hidden opacity-40 my-5" />
+                <div className="flex items-center justify-center">
+                  {isProcessing ? (
+                    <Skeleton className="h-5 w-32 bg-gray-300" />
+                  ) : (
+                    <h1
+                      className={cn(
+                        "font-semibold text-sm",
+                        activeAction === "humanize"
+                          ? "text-green-500"
+                          : "text-red-600",
+                      )}
+                    >
+                      {status}
+                    </h1>
+                  )}
+                  {/* Buttons... */}
+                </div>
+                <div>
+                  <Separator className="bg-[#939393] lg:hidden opacity-40 mt-2 mb-5" />
 
-              <div className="flex gap-7 items-center justify-center mb-5">
-                <Button
-                  onClick={() => {
-                    setOutput("");
-                    setActiveAction(null);
-                  }}
-                  className="text-red-500 shadow-sm shadow-[#0000004D] rounded-full font-extrabold"
-                >
-                  Delete
-                  <span>
-                    <Image src={Delete} alt="trash" />
-                  </span>
-                </Button>
+                  <div className="flex gap-7 items-center justify-center mb-5">
+                    <Button
+                      onClick={() => {
+                        setOutput("");
+                        setActiveAction(null);
+                      }}
+                      className="text-red-500 shadow-sm shadow-[#0000004D] rounded-full font-extrabold"
+                    >
+                      Delete
+                      <span>
+                        <Image src={Delete} alt="trash" />
+                      </span>
+                    </Button>
 
-                <Button
-                  onClick={() => {
-                    navigator.clipboard.writeText(output);
-                    toast.success("Text copied to clipboard!");
-                  }}
-                  className="shadow-sm shadow-[#0000004D] font-extrabold rounded-full"
-                >
-                  Copy
-                  <span>
-                    <Image src={Copy_Dark} alt="copy" />
-                  </span>
-                </Button>
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(output);
+                        toast.success("Text copied to clipboard!");
+                      }}
+                      className="shadow-sm shadow-[#0000004D] font-extrabold rounded-full"
+                    >
+                      Copy
+                      <span>
+                        <Image src={Copy_Dark} alt="copy" />
+                      </span>
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
+            </Card>
           </div>
-        </Card>
-      </div>
+        </>
+      )}
     </>
   );
 };
