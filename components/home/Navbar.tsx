@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { logoutAction } from "@/actions/auth";
 
 const Navbar = ({ Session }: { Session: any }) => {
   const { signOut } = authClient;
@@ -40,18 +41,6 @@ const Navbar = ({ Session }: { Session: any }) => {
       link: "#faqs",
     },
   ];
-
-  const signout = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.push("/");
-          router.refresh();
-          // redirect to login page
-        },
-      },
-    });
-  };
 
   return (
     <div>
@@ -96,7 +85,9 @@ const Navbar = ({ Session }: { Session: any }) => {
                 <Button
                   variant="link"
                   className="text-black font-semibold text-lg px-0 justify-center"
-                  onClick={signout}
+                  onClick={async () => {
+                    await logoutAction();
+                  }}
                 >
                   Log out
                 </Button>
@@ -155,7 +146,13 @@ const Navbar = ({ Session }: { Session: any }) => {
 
         {session ? (
           <div className="justify-end space-x-2 flex items-center flex-1">
-            <Button variant={"link"} className="text-white" onClick={signout}>
+            <Button
+              variant={"link"}
+              className="text-white"
+              onClick={async () => {
+                await logoutAction();
+              }}
+            >
               Log out
             </Button>
             <Button className="font-extrabold bg-white rounded-full" asChild>

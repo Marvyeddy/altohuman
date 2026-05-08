@@ -51,7 +51,9 @@ const Dashboard = ({
             <Button
               variant={"link"}
               className="text-white hover:text-red-400 max-md:hidden"
-              onClick={() => logoutAction()}
+              onClick={async () => {
+                await logoutAction();
+              }}
             >
               Log out
             </Button>
@@ -59,7 +61,9 @@ const Dashboard = ({
               className="bg-white rounded-full md:hidden"
               size={"icon"}
               title="Exit"
-              onClick={() => logoutAction()}
+              onClick={async () => {
+                await logoutAction();
+              }}
             >
               <LogOutIcon className="text-red-400" />
             </Button>

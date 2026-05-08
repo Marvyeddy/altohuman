@@ -28,7 +28,12 @@ const AccountPage = () => {
         <Image src={Logo} alt="dark-logo" className="max-md:hidden" />
 
         <div className="lg:flex-1 flex justify-end ">
-          <Button variant={"link"} onClick={() => logoutAction()}>
+          <Button
+            variant={"link"}
+            onClick={async () => {
+              await logoutAction();
+            }}
+          >
             Log out
           </Button>
         </div>
