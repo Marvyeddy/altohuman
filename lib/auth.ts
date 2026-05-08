@@ -10,12 +10,12 @@ export const auth = betterAuth({
         connectionString:process.env.DATABASE_URL,
     }),
     logger: {
-        level: "debug", // This will print the specific DB error in your terminal
+        level: "debug",
     },
     baseURL: process.env.BETTER_AUTH_URL, 
     advanced: {
         defaultCookieAttributes: {
-            sameSite: "none", // Required for cross-domain cookies
+            sameSite: "none",
             secure: true,
             httpOnly: true, 
         }

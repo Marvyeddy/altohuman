@@ -63,12 +63,7 @@ const Dashboard = ({
               <LogOutIcon className="text-red-400" />
             </Button>
             <Button className="font-extrabold bg-white rounded-full" asChild>
-              <Link href={"/account"} className="max-md:hidden">
-                My Account
-              </Link>
-              <Link href={"/account"}>
-                <UserCheck2Icon color="black" />
-              </Link>
+              <Link href={"/account"}>My Account</Link>
             </Button>
           </div>
         </nav>
