@@ -98,7 +98,7 @@ const Dashboard = ({
           </div>
         </div>
 
-        <HumanizerField wordLimit={userData?.wordLimit} />
+        <HumanizerField wordLimit={userData?.wordLimit} Session={session} />
       </div>
     </section>
   );

@@ -17,7 +17,14 @@ import { LoaderIcon } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
 
-const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
+const HumanizerField = ({
+  wordLimit,
+  Session,
+}: {
+  wordLimit?: number;
+  Session: any;
+}) => {
+  const session = Session;
   const router = useRouter();
   const [NoButton, setNoButton] = useState(false);
   const [input, setInput] = useState("");
@@ -88,6 +95,11 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
   };
 
   const handleAiAction = async (action: "humanize" | "score") => {
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+
     if (!input.trim()) return;
     setIsProcessing(action);
     setActiveAction(action);
