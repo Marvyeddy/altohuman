@@ -48,17 +48,19 @@ const Navbar = ({ Session }: { Session: any }) => {
   return (
     <div>
       //? MOBILE //
-      <nav className="flex justify-between items-center mb-[59px] lg:hidden">
+      <nav className="flex justify-between items-center mb-[59px] lg:hidden pt-6">
         <Link className="" href={"/"}>
           <Image src={Logo} alt="logo" width={24} height={24} loading="eager" />
         </Link>
 
-        <Link
-          href={"/dashboard"}
-          className="text-white hover:opacity-50 transition-colors text-xs"
-        >
-          Dashboard
-        </Link>
+        {session && (
+          <Link
+            href={"/dashboard"}
+            className="text-white hover:opacity-50 transition-colors text-xs"
+          >
+            Dashboard
+          </Link>
+        )}
 
         <Sheet>
           <SheetTrigger>

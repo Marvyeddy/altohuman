@@ -44,20 +44,21 @@ const Footer = () => {
               size={"icon-lg"}
               className="bg-[#0014330A] rounded-full max-lg:w-full flex-1"
             >
-              <Image src={Linkedin} alt="linkedin" loading="eager"/>
+              <Image src={Linkedin} alt="linkedin" loading="eager" />
             </Button>
 
             <Button
               size={"icon-lg"}
               className="bg-[#0014330A] rounded-full max-lg:w-full flex-1"
             >
-              <Image src={Twitter} alt="twitter" loading="eager"/>
+              <Image src={Twitter} alt="twitter" loading="eager" />
             </Button>
           </div>
         </div>
 
         <Typography.P size="sm" className="font-medium text-center mt-8">
-          &copy; 2025 Altohuman, Inc. All Rights Reserved{" "}
+          &copy; {new Date().getFullYear()} Altohuman, Inc. All Rights
+          Reserved{" "}
         </Typography.P>
       </div>
     </footer>
