@@ -8,6 +8,7 @@ import Link from "next/link";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -21,35 +22,23 @@ import { Loader2Icon } from "lucide-react";
 const Navbar = ({ Session }: { Session: any }) => {
   const { signOut } = authClient;
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // Track if mobile menu is open
 
-  // Use server data if client data hasn't loaded yet
   const session = Session;
   const router = useRouter();
 
   const Navlinks = [
-    {
-      text: "Features",
-      link: "#features",
-    },
-    {
-      text: "How it goes",
-      link: "#how",
-    },
-    {
-      text: "Pricing",
-      link: "#pricing",
-    },
-    {
-      text: "FAQs",
-      link: "#faqs",
-    },
+    { text: "Features", link: "#features" },
+    { text: "How it goes", link: "#how" },
+    { text: "Pricing", link: "#pricing" },
+    { text: "FAQs", link: "#faqs" },
   ];
 
   return (
     <div>
-      //? MOBILE //
-      <nav className="flex justify-between items-center mb-[59px] lg:hidden pt-6">
-        <Link className="" href={"/"}>
+      {/* MOBILE NAV */}
+      <nav className="flex justify-between items-center mb-[59px] lg:hidden pt-9">
+        <Link href={"/"}>
           <Image src={Logo} alt="logo" width={24} height={24} loading="eager" />
         </Link>
 
@@ -62,18 +51,23 @@ const Navbar = ({ Session }: { Session: any }) => {
           </Link>
         )}
 
-        <Sheet>
-          <SheetTrigger>
-            <div>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <div className="cursor-pointer">
               <Image src={Menu} alt="hamburger-menu" loading="eager" />
             </div>
           </SheetTrigger>
           <SheetContent
             side="top"
             className="[&>button]:hidden py-4 mx-6 mt-3 rounded-lg"
+            // FIX: Prevents the page from jumping to the top when the sheet closes
+            onCloseAutoFocus={(e) => e.preventDefault()}
           >
             <SheetHeader className="sr-only">
               <SheetTitle>Navigation menu</SheetTitle>
+              <SheetDescription>
+                Links to the features, pricing, and account management sections.
+              </SheetDescription>
             </SheetHeader>
 
             <ul className="flex flex-col text-center gap-6 text-lg px-8">
@@ -81,6 +75,8 @@ const Navbar = ({ Session }: { Session: any }) => {
                 <li
                   key={idx}
                   className="hover:bg-gray-100 rounded-lg transition-colors"
+                  // FIX: Closes the menu when a link is clicked
+                  onClick={() => setIsOpen(false)}
                 >
                   <a
                     href={item.link}
@@ -95,17 +91,20 @@ const Navbar = ({ Session }: { Session: any }) => {
             {session ? (
               <div className="flex flex-col gap-4 mt-4">
                 {isLoading ? (
-                  <Loader2Icon className="animate-spin text-red-500" />
+                  <div className="flex justify-center">
+                    <Loader2Icon className="animate-spin text-red-500" />
+                  </div>
                 ) : (
                   <Button
                     variant="link"
                     className="text-black font-semibold text-lg px-0 justify-center"
                     onClick={async () => {
-                      setIsLoading(true); // Start loading first!
+                      setIsLoading(true);
                       try {
                         await logoutAction();
+                        setIsOpen(false);
                       } catch (error) {
-                        setIsLoading(false); // Reset if it fails so they can try again
+                        setIsLoading(false);
                       }
                     }}
                   >
@@ -116,8 +115,9 @@ const Navbar = ({ Session }: { Session: any }) => {
                 <Button
                   className="bg-black text-white rounded-full font-extrabold text-lg py-2 w-fit mx-auto"
                   asChild
+                  onClick={() => setIsOpen(false)}
                 >
-                  <a href="/account">My account</a>
+                  <Link href="/account">My account</Link>
                 </Button>
               </div>
             ) : (
@@ -126,30 +126,33 @@ const Navbar = ({ Session }: { Session: any }) => {
                   asChild
                   variant="link"
                   className="text-black font-semibold text-lg px-0 justify-center"
+                  onClick={() => setIsOpen(false)}
                 >
-                  <a href="/login">Log in</a>
+                  <Link href="/login">Log in</Link>
                 </Button>
                 <Button
                   className="bg-black text-white rounded-full font-extrabold text-lg py-2 w-fit mx-auto"
                   asChild
+                  onClick={() => setIsOpen(false)}
                 >
-                  <a href="/register">Get started</a>
+                  <Link href="/register">Get started</Link>
                 </Button>
               </div>
             )}
           </SheetContent>
         </Sheet>
       </nav>
-      //? DESKTOP //
-      <nav className="flex justify-between mb-[85px] max-lg:hidden">
+
+      {/* DESKTOP NAV */}
+      <nav className="flex justify-between mb-[85px] max-lg:hidden pt-6">
         <Link className="flex-1" href={"/"}>
           <Image src={Logo} alt="logo" />
         </Link>
 
         {session ? (
-          <ul>
+          <ul className="flex justify-center items-center">
             <li className="text-white hover:opacity-50 transition-colors">
-              <a href="/dashboard">Dashboard</a>
+              <Link href="/dashboard">Dashboard</Link>
             </li>
           </ul>
         ) : (
@@ -165,40 +168,48 @@ const Navbar = ({ Session }: { Session: any }) => {
           </ul>
         )}
 
-        {session ? (
-          <div className="justify-end space-x-2 flex items-center flex-1">
-            {isLoading ? (
-              <Loader2Icon className="animate-spin text-red-500" />
-            ) : (
+        <div className="justify-end space-x-2 flex items-center flex-1">
+          {session ? (
+            <>
+              {isLoading ? (
+                <Loader2Icon className="animate-spin text-red-500" />
+              ) : (
+                <Button
+                  variant={"link"}
+                  className="text-white"
+                  onClick={async () => {
+                    setIsLoading(true);
+                    try {
+                      await logoutAction();
+                    } catch (error) {
+                      setIsLoading(false);
+                    }
+                  }}
+                >
+                  Log out
+                </Button>
+              )}
               <Button
-                variant={"link"}
-                className="text-white"
-                onClick={async () => {
-                  setIsLoading(true); // Start loading first!
-                  try {
-                    await logoutAction();
-                  } catch (error) {
-                    setIsLoading(false); // Reset if it fails so they can try again
-                  }
-                }}
+                className="font-extrabold bg-white rounded-full text-black hover:bg-gray-200"
+                asChild
               >
-                Log out
+                <Link href={"/account"}>My Account</Link>
               </Button>
-            )}
-            <Button className="font-extrabold bg-white rounded-full" asChild>
-              <Link href={"/account"}>My Account</Link>
-            </Button>
-          </div>
-        ) : (
-          <div className="justify-end space-x-2 flex items-center flex-1">
-            <Button className="text-white" variant={"link"}>
-              <a href="/login">Log in</a>
-            </Button>
-            <Button className="bg-white rounded-full font-extrabold">
-              <a href="/register">Get started</a>
-            </Button>
-          </div>
-        )}
+            </>
+          ) : (
+            <>
+              <Button className="text-white" variant={"link"} asChild>
+                <Link href="/login">Log in</Link>
+              </Button>
+              <Button
+                className="bg-white rounded-full font-extrabold text-black hover:bg-gray-200"
+                asChild
+              >
+                <Link href="/register">Get started</Link>
+              </Button>
+            </>
+          )}
+        </div>
       </nav>
     </div>
   );
