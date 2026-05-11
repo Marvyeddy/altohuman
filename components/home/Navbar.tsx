@@ -37,7 +37,7 @@ const Navbar = ({ Session }: { Session: any }) => {
   return (
     <div>
       {/* MOBILE NAV */}
-      <nav className="flex justify-between items-center mb-[59px] lg:hidden pt-9">
+      <nav className="flex justify-between items-center mb-[59px] lg:hidden">
         <Link href={"/"}>
           <Image src={Logo} alt="logo" width={24} height={24} loading="eager" />
         </Link>
