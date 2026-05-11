@@ -56,7 +56,7 @@ const Payment = ({
     {
       name: "Starter",
       img: Circle_Layer,
-      amount: 100,
+      amount: 200,
       list: [
         "Basic AI detection",
         "Basic Humanization",

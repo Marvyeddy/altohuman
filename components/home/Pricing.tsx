@@ -12,7 +12,7 @@ const Pricing = () => {
     {
       name: "Starter",
       img: Circle_Layer,
-      amount: 100,
+      amount: 200,
       btn: "Try it now",
       list: [
         "Basic AI detection",
