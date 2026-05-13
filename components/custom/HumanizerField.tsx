@@ -75,12 +75,17 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    if (file.type !== "text/plain" && !file.name.endsWith(".txt")) {
-      toast.warning("Please upload a .txt file.");
+  
+    // Strict structural check: Blocks PDFs on mobile even if the OS allows selection
+    const isValidType = file.type === "text/plain";
+    const isValidExt = file.name.toLowerCase().endsWith(".txt");
+  
+    if (!isValidType && !isValidExt) {
+      toast.error("Unsupported file type. Only .txt files are allowed.");
+      e.target.value = ""; // Clear input immediately
       return;
     }
-
+  
     const reader = new FileReader();
     reader.onload = (event) => {
       const content = event.target?.result;
@@ -89,9 +94,10 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
       }
     };
     reader.readAsText(file);
-
+  
     e.target.value = "";
   };
+  
 
   const handleAiAction = async (action: "humanize" | "score") => {
     if (!input.trim()) return;
@@ -191,7 +197,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
       {/* Hidden File Input */}
       <input
         type="file"
-        accept=".txt"
+        accept=".txt,text/plain"
         className="hidden"
         ref={fileInputRef}
         onChange={handleFileUpload}
