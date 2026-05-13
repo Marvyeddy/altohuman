@@ -223,7 +223,7 @@ const HumanizerField = ({ wordLimit }: { wordLimit?: number }) => {
                 )}
               >
                 <Image src={Upload} alt="upload" />
-                Upload doc
+                Upload .txt
               </Button>
             )}
 
