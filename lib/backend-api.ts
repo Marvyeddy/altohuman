@@ -55,8 +55,12 @@ export async function getCurrentUserData(
     });
 
     if (!response.ok) {
+      const error = await readApiError(
+        response,
+        "Failed to load current user data",
+      );
       console.error(
-        `Failed to load current user data: ${response.status} ${response.statusText}`,
+        `Failed to load current user data: ${response.status} ${response.statusText} - ${error}`,
       );
       return null;
     }
